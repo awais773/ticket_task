@@ -21,7 +21,7 @@ class HomeController extends Controller
 
     public function landingPage()
     {
-     
+
         if (!file_exists(storage_path() . "/installed")) {
 
             header('location:install');
@@ -31,18 +31,20 @@ class HomeController extends Controller
         // $currentWorkspace = Utility::getWorkspaceBySlug('');
         $paymentSetting = Utility::getAdminPaymentSetting();
 
-        
+
 
         if (env('DISPLAY_LANDING') == 'on' && \Schema::hasTable('landing_page_settings')) {
 
             $plans = Plan::get();
-            return view('landingpage::layouts.landingpage');
-            // return view('layouts.landing', compact('plans', 'currentWorkspace', 'paymentSetting'));
+            // return view('landingpage::layouts.landingpage');
+            return view('task.index');
+
+            return view('layouts.landing', compact('plans', 'currentWorkspace', 'paymentSetting'));
 
         } else {
 
             return redirect('login');
-            
+
         }
     }
 
@@ -98,9 +100,9 @@ class HomeController extends Controller
     public function index($slug = '')
     {
         $userObj = Auth::user();
-        
+
         $currentWorkspace = Utility::getWorkspaceBySlug($slug);
-        
+
         if ($userObj->type == 'admin') {
             $totalUsers = User::where('type', '!=', 'admin')->count();
             $totalPaidUsers = User::where('type', '!=', 'admin')->where('plan', '!=', 1)->count();
@@ -150,7 +152,7 @@ class HomeController extends Controller
                     'workspace_id' => $currentWorkspace->id,
                     'duration' => 'week',
                 ]);
-                
+
                 return view('home', compact('currentWorkspace', 'totalProject', 'totalBugs', 'totalTask', 'totalMembers', 'arrProcessLabel', 'arrProcessPer', 'arrProcessClass', 'completeTask', 'tasks', 'chartData'));
 
             } else {
@@ -184,8 +186,8 @@ class HomeController extends Controller
                 $totalMembers = UserWorkspace::where('workspace_id', '=', $currentWorkspace->id)->count();
 
                 $projectProcess = UserProject::join("projects", "projects.id", "=", "user_projects.project_id")->where("user_id", "=", $userObj->id)->where('projects.workspace', '=', $currentWorkspace->id)->groupBy('projects.status')->selectRaw('count(projects.id) as count, projects.status')->pluck('count', 'projects.status');
-                
-              
+
+
                 $arrProcessPer = [];
                 $arrProcessLabel = [];
                 foreach ($projectProcess as $lable => $process) {

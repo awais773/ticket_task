@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Models\Plan;
+use App\Models\PlanRequest;
+use App\Models\PlanRequset;
 use App\Models\Utility;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
@@ -21,20 +23,15 @@ class PlanController extends Controller
         $currentWorkspace = Utility::getWorkspaceBySlug('');
         $paymentSetting   = Utility::getAdminPaymentSetting();
 
-        if(\Auth::user()->type == 'admin')
-        {
+        if (\Auth::user()->type == 'admin') {
             $plans = Plan::get();
 
             return view('plans.admin', compact('plans', 'currentWorkspace', 'paymentSetting'));
-        }
-        elseif($currentWorkspace->creater->id == \Auth::user()->id)
-        {
+        } elseif ($currentWorkspace->creater->id == \Auth::user()->id) {
             $plans = Plan::where('status', '1')->get();
 
             return view('plans.company', compact('plans', 'currentWorkspace', 'paymentSetting'));
-        }
-        else
-        {
+        } else {
             return redirect()->route('home');
         }
     }
@@ -70,47 +67,38 @@ class PlanController extends Controller
         $validation['max_users']      = 'required|numeric';
         $validation['max_clients']    = 'required|numeric';
         $validation['max_projects']   = 'required|numeric';
-        if($request->image)
-        {
+        if ($request->image) {
             $validation['image'] = 'required|image';
         }
         $validator = Validator::make(
-            $request->all(), $validation
+            $request->all(),
+            $validation
         );
 
-        if($validator->fails())
-        {
+        if ($validator->fails()) {
             return redirect()->back()->with('error', $validator->errors()->first());
         }
         $post = $request->all();
-        if($request->monthly_price > 0 || $request->annual_price > 0)
-        {
+        if ($request->monthly_price > 0 || $request->annual_price > 0) {
             $paymentSetting = Utility::getAdminPaymentSetting();
 
-            if((isset($paymentSetting['is_stripe_enabled']) && $paymentSetting['is_stripe_enabled'] == 'on') || (isset($paymentSetting['is_paypal_enabled']) && $paymentSetting['is_paypal_enabled'] == 'on') || (isset($paymentSetting['is_paystack_enabled']) && $paymentSetting['is_paystack_enabled'] == 'on') || (isset($paymentSetting['is_flutterwave_enabled']) && $paymentSetting['is_flutterwave_enabled'] == 'on') || (isset($paymentSetting['is_razorpay_enabled']) && $paymentSetting['is_razorpay_enabled'] == 'on') || (isset($paymentSetting['is_mercado_enabled']) && $paymentSetting['is_mercado_enabled'] == 'on') || (isset($paymentSetting['is_paytm_enabled']) && $paymentSetting['is_paytm_enabled'] == 'on') || (isset($paymentSetting['is_mollie_enabled']) && $paymentSetting['is_mollie_enabled'] == 'on') || (isset($paymentSetting['is_skrill_enabled']) && $paymentSetting['is_skrill_enabled'] == 'on') || (isset($paymentSetting['is_coingate_enabled']) && $paymentSetting['is_coingate_enabled'] == 'on'))
-            {
+            if ((isset($paymentSetting['is_stripe_enabled']) && $paymentSetting['is_stripe_enabled'] == 'on') || (isset($paymentSetting['is_paypal_enabled']) && $paymentSetting['is_paypal_enabled'] == 'on') || (isset($paymentSetting['is_paystack_enabled']) && $paymentSetting['is_paystack_enabled'] == 'on') || (isset($paymentSetting['is_flutterwave_enabled']) && $paymentSetting['is_flutterwave_enabled'] == 'on') || (isset($paymentSetting['is_razorpay_enabled']) && $paymentSetting['is_razorpay_enabled'] == 'on') || (isset($paymentSetting['is_mercado_enabled']) && $paymentSetting['is_mercado_enabled'] == 'on') || (isset($paymentSetting['is_paytm_enabled']) && $paymentSetting['is_paytm_enabled'] == 'on') || (isset($paymentSetting['is_mollie_enabled']) && $paymentSetting['is_mollie_enabled'] == 'on') || (isset($paymentSetting['is_skrill_enabled']) && $paymentSetting['is_skrill_enabled'] == 'on') || (isset($paymentSetting['is_coingate_enabled']) && $paymentSetting['is_coingate_enabled'] == 'on')) {
                 $post['monthly_price'] = $request->monthly_price;
                 $post['annual_price']  = $request->annual_price;
                 $post['storage_limit']  = $request->storage_limit;
-            }
-            else
-            {
+            } else {
                 return redirect()->back()->with('error', __('Please set stripe/paypal api key & secret key for add new plan'));
             }
         }
         $post['status'] = $request->has('status') ? 1 : 0;
-        if($request->image)
-        {
+        if ($request->image) {
             $avatarName = 'plan_' . time() . '.' . $request->image->getClientOriginalExtension();
             $request->image->storeAs('plans', $avatarName);
             $post['image'] = $avatarName;
         }
-        if(Plan::create($post))
-        {
+        if (Plan::create($post)) {
             return redirect()->back()->with('success', __('Plan created Successfully!'));
-        }
-        else
-        {
+        } else {
             return redirect()->back()->with('error', __('Something is wrong'));
         }
     }
@@ -122,10 +110,26 @@ class PlanController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function show(Plan $plan)
+    public function submit_contact(Request $request)
     {
-        //
+        // dd($request->all());
+        $planReq = new PlanRequest();
+        $planReq->name = $request->name;
+        $planReq->email = $request->email;
+        $planReq->phone = $request->phone;
+        $planReq->plan_id = $request->package;
+        $planReq->subject = $request->subject;
+        $planReq->message = $request->message;
+
+        if ($planReq->save()) {
+            return redirect()->back()->with('success', __('Contact request created Successfully!'));
+        } else {
+            return redirect()->back()->with('error', __('Something is wrong'));
+        }
+
+        // return $plan->input();
     }
+
 
     /**
      * Show the form for editing the specified resource.
@@ -152,12 +156,10 @@ class PlanController extends Controller
     public function update($planID, Request $request)
     {
         $plan = Plan::find($planID);
-        if($plan)
-        {
+        if ($plan) {
             $validation         = [];
             $validation['name'] = 'required|unique:plans,name,' . $planID;
-            if($plan->id != 1)
-            {
+            if ($plan->id != 1) {
                 $validation['monthly_price'] = 'required|numeric|min:0';
                 $validation['annual_price']  = 'required|numeric|min:0';
                 $validation['trial_days']    = 'required|numeric';
@@ -167,71 +169,55 @@ class PlanController extends Controller
             $validation['max_users']      = 'required|numeric';
             $validation['max_clients']    = 'required|numeric';
             $validation['max_projects']   = 'required|numeric';
-            if($request->image)
-            {
+            if ($request->image) {
                 $validation['image'] = 'required|image';
             }
             $validator = \Validator::make(
-                $request->all(), $validation
+                $request->all(),
+                $validation
             );
 
-            if($validator->fails())
-            {
+            if ($validator->fails()) {
                 return redirect()->back()->with('error', $validator->errors()->first());
             }
 
             $post = $request->all();
 
-            if(($request->monthly_price > 0 || $request->annual_price > 0) && $plan->id != 1)
-            {
+            if (($request->monthly_price > 0 || $request->annual_price > 0) && $plan->id != 1) {
                 $paymentSetting = Utility::getAdminPaymentSetting();
 
-                if(($paymentSetting['is_stripe_enabled'] == 'on' && !empty($paymentSetting['stripe_key']) && !empty($paymentSetting['stripe_secret'])) || ($paymentSetting['is_paypal_enabled'] == 'on' && !empty($paymentSetting['paypal_client_id']) && !empty($paymentSetting['paypal_secret_key'])) || ($request->monthly_price <= 0 && $request->annual_price <= 0))
-                {
+                if (($paymentSetting['is_stripe_enabled'] == 'on' && !empty($paymentSetting['stripe_key']) && !empty($paymentSetting['stripe_secret'])) || ($paymentSetting['is_paypal_enabled'] == 'on' && !empty($paymentSetting['paypal_client_id']) && !empty($paymentSetting['paypal_secret_key'])) || ($request->monthly_price <= 0 && $request->annual_price <= 0)) {
 
                     $post['monthly_price'] = $request->monthly_price;
                     $post['annual_price']  = $request->annual_price;
                     $post['storage_limit']  = $request->storage_limit;
-
-                }
-                else
-                {
+                } else {
                     return redirect()->back()->with('error', __('Please set payment api key & secret key for add new plan'));
                 }
             }
 
-            if($plan->id != 1)
-            {
+            if ($plan->id != 1) {
                 $post['status'] = $request->has('status') ? 1 : 0;
             }
 
-            if($request->image)
-            {
+            if ($request->image) {
                 $avatarName = 'plan_' . time() . '.' . $request->image->getClientOriginalExtension();
-                 $dir = 'plans/';
-                 $path = Utility::upload_file($request,'image',$avatarName,$dir,[]);
-                if($path['flag'] == 1)
-                {
+                $dir = 'plans/';
+                $path = Utility::upload_file($request, 'image', $avatarName, $dir, []);
+                if ($path['flag'] == 1) {
                     $image = $path['url'];
-                }
-                else
-                {
+                } else {
                     return redirect()->back()->with('error', __($path['msg']));
                 }
                 // $request->image->storeAs('plans', $avatarName);
                 $post['image'] = $avatarName;
             }
-            if($plan->update($post))
-            {
+            if ($plan->update($post)) {
                 return redirect()->back()->with('success', __('Plan updated Successfully!'));
-            }
-            else
-            {
+            } else {
                 return redirect()->back()->with('error', __('Something is wrong'));
             }
-        }
-        else
-        {
+        } else {
             return redirect()->back()->with('error', __('Plan not found'));
         }
     }
@@ -245,7 +231,6 @@ class PlanController extends Controller
      */
     public function destroy($planID)
     {
-
     }
 
     public function userPlan(Request $request)
@@ -253,21 +238,15 @@ class PlanController extends Controller
         $objUser = \Auth::user();
         $planID  = \Illuminate\Support\Facades\Crypt::decrypt($request->code);
         $plan    = Plan::find($planID);
-        if($plan)
-        {
-            if($plan->monthly_price <= 0)
-            {
+        if ($plan) {
+            if ($plan->monthly_price <= 0) {
                 $objUser->assignPlan($plan->id, 'monthly');
 
                 return redirect()->route('plans.index')->with('success', __('Plan activated Successfully!'));
-            }
-            else
-            {
+            } else {
                 return redirect()->back()->with('error', __('Something is wrong'));
             }
-        }
-        else
-        {
+        } else {
             return redirect()->back()->with('error', __('Plan not found'));
         }
     }
@@ -278,25 +257,18 @@ class PlanController extends Controller
         $currentWorkspace = Utility::getWorkspaceBySlug('');
         $paymentSetting   = Utility::getAdminPaymentSetting();
 
-        try
-        {
+        try {
             $planID = \Illuminate\Support\Facades\Crypt::decrypt($code);
             $plan   = Plan::find($planID);
-                
-            if($plan)
-            {
+
+            if ($plan) {
                 $plan->price = (env('CURRENCY_SYMBOL') ? env('CURRENCY_SYMBOL') : '$') . $plan->{$frequency . '_price'};
 
                 return view('plans.payment', compact('plan', 'frequency', 'currentWorkspace', 'paymentSetting'));
-            }
-            else
-            {
+            } else {
                 return redirect()->back()->with('error', __('Plan is deleted.'));
             }
-            
-        }
-        catch(\Exception $e)
-        {
+        } catch (\Exception $e) {
             return redirect()->back()->with('error', __('Something went wrong!'));
         }
     }
@@ -305,11 +277,9 @@ class PlanController extends Controller
     {
         $plan = Plan::find($plan_id);
         $user = Auth::user();
-        if($plan && $user->type == 'user' && $user->is_trial_done == 0)
-        {
+        if ($plan && $user->type == 'user' && $user->is_trial_done == 0) {
             $assignPlan = $user->assignPlan($plan->id);
-            if($assignPlan['is_success'])
-            {
+            if ($assignPlan['is_success']) {
                 $days                   = $plan->trial_days == '-1' ? '36500' : $plan->trial_days;
                 $user->is_trial_done    = 1;
                 $user->plan             = $plan->id;
@@ -317,14 +287,10 @@ class PlanController extends Controller
                 $user->save();
 
                 return redirect()->route('home')->with('success', __('Your trial has been started'));
-            }
-            else
-            {
+            } else {
                 return redirect()->route('home')->with('error', __('Your trial can not be started'));
             }
-        }
-        else
-        {
+        } else {
             return redirect()->back()->with('error', __('Permission Denied.'));
         }
     }

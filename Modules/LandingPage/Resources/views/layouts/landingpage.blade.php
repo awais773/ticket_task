@@ -60,7 +60,7 @@
         <link rel="stylesheet" href="{{ asset('assets/css/style-dark.css') }}">
     @else
         <link rel="stylesheet" href="{{ Module::asset('LandingPage:Resources/assets/css/style.css')}}" id="main-style-link">
-    @endif                                                  
+    @endif
     <!-- vendor css -->
     {{-- <link rel="stylesheet" href="  {{ Module::asset('LandingPage:Resources/assets/css/style.css')}}" /> --}}
     <link rel="stylesheet" href=" {{ Module::asset('LandingPage:Resources/assets/css/customizer.css')}}" />
@@ -435,7 +435,9 @@
                             <p>{!! $settings['plan_description'] !!}</p>
                         </div>
                     </div>
+
                 </div>
+
                 <div class="row justify-content-center">
 
                     @php
@@ -453,6 +455,7 @@
                                 <p>
                                     {!! $value->description !!}
                                 </p>
+                                
                                 <ul class="list-unstyled my-3">
                                     <li>
                                         <div class="form-check text-start">
@@ -495,24 +498,7 @@
                                                 Storage Limit</label>
                                         </div>
                                     </li>
-                                    
-                                    {{-- <li>
-                                        <div class="form-check text-start">
-                                            <input class="form-check-input input-primary" type="checkbox" id="customCheckc1"
-                                                {{ $value->crm != 0 ? 'checked' : "" }}>
-                                            <label class="form-check-label"
-                                                for="customCheckc1">{{ $value->crm ==1 ? 'Enable' : 'Disable' }} CRM</label>
-                                        </div>
-                                    </li>
-                                    <li>
-                                        <div class="form-check text-start">
-                                            <input class="form-check-input input-primary" type="checkbox" id="customCheckc1"
-                                                {{ $value->hrm != 0 ? 'checked' : "" }}>
-                                            <label class="form-check-label"
-                                                for="customCheckc1">{{ $value->hrm ==1 ? 'Enable' : 'Disable' }} HRM</label>
-                                        </div>
-                                    </li> --}}
-                                    
+
                                     <li>
                                         <div class="form-check text-start">
                                             <input class="form-check-input input-primary" type="checkbox" id="customCheckc1"
@@ -522,17 +508,6 @@
                                                 Chatgpt</label>
                                         </div>
                                     </li>
-                                    {{-- <li>
-                                        <div class="form-check text-start">
-                                            <input class="form-check-input input-primary" type="checkbox" id="customCheckc1"
-                                                {{ $value->pos != 0 ? 'checked' : "" }}>
-                                            <label class="form-check-label"
-                                                for="customCheckc1">{{ $value->pos ==1 ? 'Enable' : 'Disable' }} POS</label>
-                                        </div>
-                                    </li> --}}
-
-
-
 
                                 </ul>
                                 <div class="d-grid">
@@ -563,13 +538,16 @@
                         </div>
                     </div>
                 </div>
+
                 <div class="row">
                     <div class="col-md-6">
+
                         <div class="accordion accordion-flush" id="accordionFlushExample">
                             @if (is_array(json_decode($settings['faqs'], true)) || is_object(json_decode($settings['faqs'],
                             true)))
                             @foreach (json_decode($settings['faqs'], true) as $key => $value)
                             @if ($key % 2 == 0)
+
                             <div class="accordion-item">
                                 <h2 class="accordion-header" id="{{ 'flush-heading'.$key }}">
                                     <button class="accordion-button collapsed fw-bold" type="button"
@@ -591,7 +569,9 @@
 
                         </div>
                     </div>
+
                     <div class="col-md-6">
+
                         <div class="accordion accordion-flush" id="accordionFlushExample2">
                             @if (is_array(json_decode($settings['faqs'], true)) || is_object(json_decode($settings['faqs'],
                             true)))
@@ -638,7 +618,7 @@
                     </div>
                 </div>
                 <div class="col-lg-8">
-                    <div class="row justify-content-center gy-3">   
+                    <div class="row justify-content-center gy-3">
 
 
                         @if (is_array(json_decode($settings['testimonials'])) ||

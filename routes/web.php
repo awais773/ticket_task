@@ -980,3 +980,20 @@ Route::get('/{slug}/projects/{id}/task-board/{tid}/{cid?}',[ProjectController::c
 Route::get('index',function(){
     return view('task.index');
 });
+
+Route::get('about', function () {
+    return view('task.about');
+});
+
+Route::get('pricing', function () {
+    return view('task.pricing');
+});
+
+Route::get('contact', function () {
+    return view('task.contact');
+});
+Route::post('submit_contact',[PlanController::class, 'submit_contact']);
+
+Route::get('service', function () {
+    return view('task.service');
+});
