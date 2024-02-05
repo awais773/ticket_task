@@ -1468,7 +1468,7 @@ section {
 }
 
 .team .member .social a:hover {
-  color: #68a4c4;
+  color: #1E4356;
 }
 
 .team .member .social i {
@@ -1527,10 +1527,10 @@ section {
 
 .contact .info-box i {
   font-size: 32px;
-  color: #68a4c4;
+  color: #1E4356;
   border-radius: 50%;
   padding: 8px;
-  border: 2px dotted #a2cce3;
+  border: 2px dotted #1E4356 !important;
 }
 
 .contact .info-box h3 {

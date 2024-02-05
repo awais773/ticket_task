@@ -243,10 +243,15 @@ File: style.css
     background: linear-gradient(141.55deg, #48494B 3.46%, #48494B 99.86%), #48494B;
 }
 
-.doc-img.themes-color > a[data-value="theme-10"],
+/* .doc-img.themes-color > a[data-value="theme-10"],
   .theme-color.themes-color > a[data-value="theme-10"] {
-    background: linear-gradient(141.55deg, #0C7785 3.46%, #0C7785 99.86%), #0C7785;
+    background: linear-gradient(141.55deg, #1E4356  3.46%, #1E4356 99.86%), #1E4356;
+} */
+.doc-img.themes-color > a[data-value="theme-10"],
+.theme-color.themes-color > a[data-value="theme-10"] {
+    background: linear-gradient(141.55deg, #1E4356 3.46%, #1E4356 99.86%), #1E4356 !important;
 }
+
 
 .doc-img > a {
     width: 100px;

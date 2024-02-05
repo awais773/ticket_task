@@ -5,7 +5,7 @@
     <meta charset="utf-8" />
     <meta content="width=device-width, initial-scale=1.0" name="viewport" />
 
-    <title>Contact - Task Ticket Bootstrap Template</title>
+    <title>Task Ticket Software</title>
     <meta content="" name="description" />
     <meta content="" name="keywords" />
 
@@ -37,12 +37,18 @@
 </head>
 
 <body>
+    <!-- Loader -->
+    <div class="loader-wrapper">
+        <div class="loader"></div>
+    </div>
     <!-- ======= Header ======= -->
     <header id="header" class="fixed-top d-flex align-items-center header-transparent">
         <div class="container d-flex justify-content-between align-items-center">
             <div class="logo">
                 <h1 class="text-light">
-                    <a href="index.html"><span>Task Ticket</span></a>
+                    {{-- <a href="index.html"><span>Task Ticket</span></a> --}}
+                    <img src="assets/image/company1.jpg" class="img-fluid" alt="" />
+                    <a href="{{ url('index.html') }}"><span>Tasks Ticket</span></a>
                 </h1>
                 <!-- Uncomment below if you prefer to use an image logo -->
                 <!-- <a href="index.html"><img src="assets/img/logo.png" alt="" class="img-fluid"></a>-->
@@ -60,7 +66,34 @@
                             Plan</a></li>
                     <li><a class="{{ Request::is('contact') ? 'active' : '' }}" href="{{ url('contact') }}">Contact
                             Us</a></li>
-                    <li><a href="https://tickettask.fastnetstaffing.in/login">Login</a></li>
+                    <li><a class="{{ Request::is('') ? 'active' : '' }}" href="{{ url('https://tickettask.fastnetstaffing.in/login') }}">Login</a>
+                    </li>
+                    </li>
+
+                    <li>
+                        <a class="dropdown-item" href="{{ url('arabic-contact') }}">
+                            Arabic</a>
+                    </li>
+                    {{-- <li class="nav-item dropdown">
+                        <a id="navbarDropdown" class="nav-link dropdown-toggle" href="#" role="button"
+                            data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            Language
+                        </a>
+
+                        <ul class="dropdown-menu">
+                            <li><a class="dropdown-item" href="{{ url('contact') }}">English<img
+                                        src="assets/image/usa.jpeg" class="img-fluid flag-icon" alt="" /> </a>
+                            </li>
+                            <li>
+                                <a class="dropdown-item" href="{{ url('arabic-contact') }}">
+                                    Arabic<img src="assets/image/suadi.jpeg" class="img-fluid flag-icon"
+                                        alt="" /></a>
+                            </li>
+                        </ul>
+
+
+                    </li> --}}
+
 
                 </ul>
                 <i class="bi bi-list mobile-nav-toggle"></i>
@@ -86,44 +119,60 @@
         <!-- End Contact Section -->
 
         <!-- ======= Contact Section ======= -->
-        <section class="contact" data-aos="fade-up" data-aos-easing="ease-in-out" data-aos-duration="500">
+        <section class="contact" data-aos="fade-up" data-aos-easing="ease-in-out" data-aos-duration="500"
+            id="contact">
             <div class="container">
                 <div class="row">
                     <div class="col-lg-6">
                         <div class="row">
                             <div class="col-md-12">
                                 <div class="info-box">
-                                    <i class="bx bx-map"></i>
+                                    <i class="bx bx-map" style="color: #1E4356; border:2px dotted #1E4356;"></i>
                                     <h3>Our Address</h3>
                                     <p>
-                                        M-19,Mega Tower Gulberg 3,<br />
-                                        Lahore Pakistan
+                                        Kingdom of Saudi Arabia-Riyadh,<br />Al-Maiaz Area- P.O.Box 13573 Code.No.11414
                                     </p>
                                 </div>
                             </div>
                             <div class="col-md-6">
                                 <div class="info-box">
-                                    <i class="bx bx-envelope"></i>
+                                    <i class="bx bx-envelope" style="color: #1E4356;border:2px dotted #1E4356;"></i>
                                     <h3>Email Us</h3>
-                                    <p>info@technolyte.com</p>
-                                    <p>info@technolyte.com</p>
+                                    <p>info@its-gate.com</p>
+                                    <p>info@its-gate.com</p>
                                 </div>
                             </div>
                             <div class="col-md-6">
                                 <div class="info-box">
-                                    <i class="bx bx-phone-call"></i>
+                                    <i class="bx bx-phone-call" style="color: #1E4356; border:2px dotted #1E4356;"></i>
                                     <h3>Call Us</h3>
-                                    <p>+92 3074914979</p>
-                                    <p>+92 123456789</p>
+                                    <p>+669 0504644445</p>
+                                   <p>+669 920006409</p>
                                 </div>
                             </div>
                         </div>
                     </div>
 
                     <div class="col-lg-6">
+
+                        <div id="notification-container" style="top: 20px; right: 20px; z-index: 1000;">
+                            @if (session('success'))
+                                <div class="alert alert-success" id="success-message">
+                                    {{ session('success') }}
+                                </div>
+                            @endif
+
+                            @if (session('error'))
+                                <div class="alert alert-danger" id="error-message">
+                                    {{ session('error') }}
+                                </div>
+                            @endif
+                        </div>
+
                         <form action="{{ url('submit_contact') }}" method="post" role="form"
                             class="php-email-form0909">
                             @csrf()
+
                             <div class="row">
                                 <div class="col-md-6 form-group">
                                     <input type="text" name="name" class="form-control" id="name"
@@ -134,19 +183,30 @@
                                         placeholder="Your Email" required />
                                 </div>
                             </div>
-                            <!-- 2nd row  -->
 
+                            <!-- 2nd row -->
                             <div class="row" style="margin-top: 10px">
-                                <div class="col-md-6 form-group">
+                                <div class="col-md-6 form-group mt-3 mt-md-0">
                                     <input type="text" name="phone" class="form-control" id="phone"
                                         placeholder="Your Phone Number" required />
                                 </div>
-                                <!-- <div class="col-md-6 form-group mt-3 mt-md-0">
-                  <input type="package" class="form-control" name="package" id="package" placeholder="Select Package" required>
-                </div> -->
 
-                                <!-- old code  -->
                                 <div class="col-md-6 form-group mt-3 mt-md-0">
+                                    <input type="password" name="password" class="form-control" id="password"
+                                        placeholder="Your Password" required />
+                                </div>
+
+                            </div>
+
+                            <!-- end 2nd row -->
+                            {{-- 3rd row --}}
+                            <div class="row">
+
+                                <div class="col-md-6 form-group mt-3">
+                                    <input type="text" class="form-control" name="subject" id="subject"
+                                        placeholder="Subject" required />
+                                </div>
+                                <div class="col-md-6 form-group mt-3 mt-md-3">
                                     <select class="form-select" aria-label="Default select example" name="package">
                                         <option value="" disabled selected>Select Package</option>
                                         <option value="1">Free</option>
@@ -155,26 +215,20 @@
                                     </select>
                                 </div>
                             </div>
-                            <!-- end 2nd row  -->
-                            <div class="form-group mt-3">
-                                <input type="text" class="form-control" name="subject" id="subject"
-                                    placeholder="Subject" required />
-                            </div>
+
+
+
                             <div class="form-group mt-3">
                                 <textarea class="form-control" name="message" rows="5" placeholder="Message" required></textarea>
                             </div>
-                            {{-- <div class="my-3">
-                                <div class="loading">Loading</div>
-                                <div class="error-message"></div>
-                                <div class="sent-message">
-                                    Your message has been sent. Thank you!
-                                </div>
-                            </div> --}}
+
                             <div class="text-center my-5">
-                                {{-- <input type="submit" value="Send Message"> --}}
-                                <button type="submit" style="color: #fff;background-color:#85B5D1;border:none;padding:10px;border-radius:7px;">Send Message</button>
+                                <button type="submit"
+                                    style="color: #fff;background-color:#1E4356;border:none;padding:10px;border-radius:7px;">Send
+                                    Message</button>
                             </div>
                         </form>
+
                     </div>
                 </div>
             </div>
@@ -194,15 +248,15 @@
     <!-- End #main -->
 
     <!-- ======= Footer ======= -->
-    <footer id="footer" data-aos="fade-up" data-aos-easing="ease-in-out" data-aos-duration="500">
+  <footer id="footer" data-aos="fade-up" data-aos-easing="ease-in-out" data-aos-duration="500">
         <div class="footer-newsletter">
             <div class="container">
                 <div class="row">
                     <div class="col-lg-6">
                         <h4>Our Newsletter</h4>
-                        <p>
-                            "Our Newsletter" is a curated source of information designed to
-                            keep our audience <br />informed and engaged.
+                        <p style=" text-align: justify;">
+                            "Our Newsletter" is a curated source of information designed to keep our audience
+                            <br>informed and engaged.
                         </p>
                     </div>
                     <div class="col-lg-6">
@@ -267,19 +321,18 @@
                     <div class="col-lg-3 col-md-6 footer-contact">
                         <h4>Contact Us</h4>
                         <p>
-                            M-19,Mega Tower Gulberg 3,<br />Lahore Pakistan<br /><br />
-                            <strong>Phone:</strong> +92 3074914979<br />
-                            <strong>Email:</strong> info@technolyte.com<br />
+                            Kingdom of Saudi Arabia-Riyadh,<br />Al-Maiaz Area- P.O.Box 13573<br> Code.No.11414
+                          <br>  <strong>Phone:</strong> +669 0504644445<br />
+                            <strong>Email:</strong> info@its-gate.com<br />
                         </p>
                     </div>
 
                     <div class="col-lg-3 col-md-6 footer-info">
-                        <h3>About Task Ticket</h3>
-                        <p>
-                            If "Task Ticket" is a term used in a particular context, such as
-                            project management, software development, or another field, it
-                            would be helpful to have more details to provide a more accurate
-                            and relevant paragraph.
+                        <h3>About Tasks Ticket</h3>
+                        <p style=" text-align: justify;">
+                            If "Task Ticket" is a term used in a particular context, such as project management,
+                            software development, or another field, it would be helpful to have more details to provide
+                            a more accurate and relevant paragraph.
                         </p>
                         <div class="social-links mt-3">
                             <a href="#" class="twitter"><i class="bx bxl-twitter"></i></a>
@@ -301,7 +354,7 @@
                 <!-- You can delete the links only if you purchased the pro version. -->
                 <!-- Licensing information: https://bootstrapmade.com/license/ -->
                 <!-- Purchase the pro version with working PHP/AJAX contact form: https://bootstrapmade.com/free-bootstrap-template-corporate-moderna/ -->
-                Designed by <a href="https://technolyte.com/">TechnoLyte</a>
+                Designed by <a href="https://its-gates.com/" target="_blank">its-gates</a>
             </div>
         </div>
     </footer>
@@ -322,6 +375,45 @@
 
     <!-- Template Main JS File -->
     <script src="frontend/js/main.js"></script>
+    <script>
+        window.addEventListener('load', function() {
+            // hide the loader when the page has finished loading
+            document.querySelector('.loader-wrapper').style.display = 'none';
+        });
+    </script>
+
+    <script>
+        // Wait for the document to be ready
+        document.addEventListener('DOMContentLoaded', function() {
+            // Check if success message exists
+            var successMessage = document.getElementById('success-message');
+            if (successMessage) {
+                // If it exists, hide it after 5 seconds
+                setTimeout(function() {
+                    successMessage.style.display = 'none';
+                }, 3000); // Adjust the time (in milliseconds) as needed
+            }
+
+            // Check if error message exists
+            var errorMessage = document.getElementById('error-message');
+            if (errorMessage) {
+                // If it exists, hide it after 5 seconds
+                setTimeout(function() {
+                    errorMessage.style.display = 'none';
+                }, 3000); // Adjust the time (in milliseconds) as needed
+            }
+        });
+    </script>
+
+
 </body>
 
 </html>
+<style>
+    .flag-icon {
+        width: 20px;
+        height: auto;
+        margin-right: 5px;
+
+    }
+</style>

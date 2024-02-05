@@ -34,6 +34,7 @@
                                             {{-- <th>{{ __('PLAN ID') }}</th> --}}
                                               <th>{{ __('SUBJECT') }}</th>
                                                 <th>{{ __('MESSAGE') }}</th>
+                                                <th>{{ __('PACKAGE') }}</th>
                                                     <th>{{ __('DATE') }}</th>
 
                                     <th>{{ __('ACTION') }}</th>
@@ -86,15 +87,19 @@
                                                      <div class="font-weight-bold">{{ $prequest->message }}</div>
 
                                             </td>
+                                             <td>
+                                                     <div class="font-weight-bold">{{ $prequest->plan_id }}</div>
+
+                                            </td>
                                             <td>{{ \App\Models\Utility::getDateFormated($prequest->created_at, true) }}
                                             </td>
                                             <td>
                                                 <div>
-                                                    <a href="{{ route('response.request', [$prequest->id, 1]) }}"
+                                                    {{-- <a href="{{ route('response.request', [$prequest->id, 1]) }}"
                                                         data-toggle="tooltip" title="{{ __('Accept') }}"
                                                         class="action-btn btn-success  btn btn-sm d-inline-flex align-items-center">
                                                         <i class="ti ti-check"></i>
-                                                    </a>
+                                                    </a> --}}
                                                     <a href="{{ route('response.request', [$prequest->id, 0]) }}"
                                                         data-toggle="tooltip" title="{{ __('Delete') }}"
                                                         class="action-btn btn-danger  btn btn-sm d-inline-flex align-items-center">

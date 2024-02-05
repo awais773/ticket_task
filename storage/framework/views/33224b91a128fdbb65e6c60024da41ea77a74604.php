@@ -8,23 +8,23 @@
     if ($setting['color']) {
         $color = $setting['color'];
     }
-    
+
 ?>
 
 <?php
     $logo = \App\Models\Utility::get_file('logo/');
     $meta_images = \App\Models\Utility::get_file('uploads/logo/');
     $file_type = config('files_types');
-    
+
     $local_storage_validation = $setting['local_storage_validation'];
     $local_storage_validations = explode(',', $local_storage_validation);
-    
+
     $s3_storage_validation = $setting['s3_storage_validation'];
     $s3_storage_validations = explode(',', $s3_storage_validation);
-    
+
     $wasabi_storage_validation = $setting['wasabi_storage_validation'];
     $wasabi_storage_validations = explode(',', $wasabi_storage_validation);
-    
+
 ?>
 
 <?php $__env->startSection('links'); ?>
@@ -67,7 +67,7 @@
 
                                 <div class="float-end"><i class="ti ti-chevron-right"></i></div>
                             </a>
-                            <a href="#cache" 
+                            <a href="#cache"
                                 class="list-group-item list-group-item-action border-0"><?php echo e(__('Cache settings')); ?>
 
                                 <div class="float-end"><i class="ti ti-chevron-right"></i></div>
@@ -310,7 +310,7 @@ unset($__errorArgs, $__bag); ?>
                                                             </div>
                                                         </div>
                                                     </div>
-                                                    
+
                                                 </div>
                                                 <h4 class="small-title mb-4"><?php echo e(__('Theme Customizer')); ?></h4>
                                                 <div class="col-12">
@@ -663,7 +663,7 @@ unset($__errorArgs, $__bag); ?>
                                                                             <div class="form-check form-switch custom-switch-v1">
                                                                                 <input type="hidden" name="is_manual_enabled" value="off">
                                                                                 <input type="checkbox" class="form-check-input"
-                                                                                    name="is_manual_enabled" id="is_manual_enabled" 
+                                                                                    name="is_manual_enabled" id="is_manual_enabled"
                                                                                     <?php echo e(isset($payment_detail['is_manual_enabled']) && $payment_detail['is_manual_enabled'] == 'on' ? 'checked="checked"' : ''); ?>>
                                                                                 <label class="custom-control-label form-label"
                                                                                     for="is_manual_enabled"></label>
@@ -737,7 +737,7 @@ unset($__errorArgs, $__bag); ?>
                                                                                 <input type="checkbox"
                                                                                     class="form-check-input"
                                                                                     name="is_stripe_enabled"
-                                                                                    id="is_stripe_enabled" 
+                                                                                    id="is_stripe_enabled"
                                                                                     <?php echo e(isset($payment_detail['is_stripe_enabled']) && $payment_detail['is_stripe_enabled'] == 'on' ? 'checked' : ''); ?>>
                                                                                 <label
                                                                                     class="custom-control-label form-control-label "
@@ -2408,7 +2408,7 @@ unset($__errorArgs, $__bag); ?>
                                                                             <?php echo e(__('PayTR')); ?>
 
                                                                         </span>
-                                                                        
+
                                                                         <div class="d-flex align-items-center">
                                                                             <span class="me-2">Enable:</span>
                                                                             <div
@@ -2983,7 +2983,7 @@ unset($__errorArgs, $__bag); ?>
                             <div class="row justify-content-center">
                                 <div class="col-md-12">
                                     <div class="card" id="">
-                                       
+
                                         <?php echo e(Form::open(array('route'=>'cookie.setting','method'=>'post'))); ?>
 
                                             <div class="card-header flex-column flex-lg-row  d-flex align-items-lg-center gap-2 justify-content-between">
@@ -3072,7 +3072,7 @@ unset($__errorArgs, $__bag); ?>
                                                             <a href="<?php echo e(asset(Storage::url('uploads/sample')) . '/data.csv'); ?>" class="btn  btn-primary">
                                                                 <i class="ti ti-download"></i>
                                                             </a>
-                                                    <?php endif; ?> 
+                                                    <?php endif; ?>
                                                 </div>
                                                 <div class="text-end col-auto">
                                                     <input type="submit" value="<?php echo e(__('Save Changes')); ?>" class="btn btn-primary">
@@ -3090,13 +3090,13 @@ unset($__errorArgs, $__bag); ?>
                             <div class="row justify-content-center">
                                 <div class="col-md-12">
                                     <div class="card" id="">
-                                       
+
                                         <?php echo e(Form::model($payment_detail,array('route'=>'settings.chatgptkey','method'=>'post'))); ?>
 
                                             <div class="card-header flex-column flex-lg-row  d-flex align-items-lg-center gap-2 justify-content-between">
                                                 <h5><?php echo e(__('Chat GPT Key Settings')); ?></h5>
-                                                
-                                                
+
+
 
                                             </div>
                                             <div class="card-body">
@@ -3138,18 +3138,18 @@ unset($__errorArgs, $__bag); ?>
 
             $("input").click(function(){
 
-                event.stopPropagation() // or 
+                event.stopPropagation() // or
                 event.preventDefault
                 console.log(event);
                 $(this).parent().SomehowStopCollapse;
 
             });
-                
+
             // $(document).on('click', $("input"), function(e){
             //     event1 = document.getElementById("collapse6");
             //     event = $("div.accordion-collapse").attr("data-bs-toggle", "collapse");
 
-            //     $('#accordion').bind('accordionchange', 
+            //     $('#accordion').bind('accordionchange',
             //         function() {
             //             alert('Active tab index: ' + $(this).accordion('option', 'active'))
             //         });

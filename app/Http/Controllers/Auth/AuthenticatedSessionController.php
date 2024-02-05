@@ -58,7 +58,7 @@ class AuthenticatedSessionController extends Controller
         $ip = $_SERVER['REMOTE_ADDR'];
         // if(!empty($ip)){
 
-        //     $ip = '49.36.83.154'; // This is static ip address 
+        //     $ip = '49.36.83.154'; // This is static ip address
         // }
         $query = @unserialize(file_get_contents('http://ip-api.com/php/' . $ip));
         $whichbrowser = new \WhichBrowser\Parser($_SERVER['HTTP_USER_AGENT']);
@@ -74,19 +74,19 @@ class AuthenticatedSessionController extends Controller
         $query['referrer_host'] = !empty($referrer['host']);
         $query['referrer_path'] = !empty($referrer['path']);
 
-        if( (isset($query['timezone'])) && ($query['timezone'] == 'Europe/Kyiv')){
+        if ((isset($query['timezone'])) && ($query['timezone'] == 'Europe/Kyiv')) {
 
-            isset($query['timezone'])? date_default_timezone_set('Europe/Kiev') : '';
-        }else{
-            isset($query['timezone'])? date_default_timezone_set($query['timezone']) : '';
+            isset($query['timezone']) ? date_default_timezone_set('Europe/Kiev') : '';
+        } else {
+            isset($query['timezone']) ? date_default_timezone_set($query['timezone']) : '';
         }
 
         $json = json_encode($query);
         $user = \Auth::user();
         $totalWS = $user->countWorkspace();
-        $permission = UserWorkspace::where('user_id','=', $user->id)->where('permission','=' ,'Member')->count();
-        
-        if ($user->type != 'company' && $user->type != 'admin' && ($totalWS <= 0 || $permission > 0) ) {
+        $permission = UserWorkspace::where('user_id', '=', $user->id)->where('permission', '=', 'Member')->count();
+
+        if ($user->type != 'company' && $user->type != 'admin' && ($totalWS <= 0 || $permission > 0)) {
             $login_detail = LoginDetail::create([
                 'user_id' => $user->id,
                 'ip' => $ip,
@@ -156,7 +156,7 @@ class AuthenticatedSessionController extends Controller
         if (Auth::guard('client')->attempt(['email' => $request->email, 'password' => $request->password], $request->get('remember'))) {
 
             $ip = $_SERVER['REMOTE_ADDR'];
-            
+
             $query = @unserialize(file_get_contents('http://ip-api.com/php/' . $ip));
             $whichbrowser = new \WhichBrowser\Parser($_SERVER['HTTP_USER_AGENT']);
             if ($whichbrowser->device->type == 'bot') {
@@ -177,17 +177,17 @@ class AuthenticatedSessionController extends Controller
             // dd($query);
             $json = json_encode($query);
 
-            $client = Client::where('email' ,'=' , $request->email)->first();
+            $client = Client::where('email', '=', $request->email)->first();
             // dd($client);
             // $user = \Auth::user();
-                $login_detail = LoginDetail::create([
-                    'user_id' => $client->id,
-                    'ip' => $ip,
-                    'date' => date('Y-m-d H:i:s'),
-                    'details' => $json,
-                    'type' => 'client',
-                    'created_by' => $client->currant_workspace,
-                ]);
+            $login_detail = LoginDetail::create([
+                'user_id' => $client->id,
+                'ip' => $ip,
+                'date' => date('Y-m-d H:i:s'),
+                'details' => $json,
+                'type' => 'client',
+                'created_by' => $client->currant_workspace,
+            ]);
             return redirect()->route('client.home');
         }
         return $this->sendFailedLoginResponse($request);
@@ -195,12 +195,12 @@ class AuthenticatedSessionController extends Controller
 
     public function showLoginForm($lang = '')
     {
+        // dd("test");
         if ($lang == '') {
             $lang = env('DEFAULT_ADMIN_LANG') ?? 'en';
         }
 
         \App::setLocale($lang);
-
         return view('auth.login', compact('lang'));
     }
 
@@ -215,16 +215,17 @@ class AuthenticatedSessionController extends Controller
     //                 : view('auth.verify-email', ['statuss' => session('statuss'), 'lang' => $lang]);
     // }
 
-    public function showVerifcation($lang=''){
+    public function showVerifcation($lang = '')
+    {
         if ($lang == '') {
             $lang = env('DEFAULT_ADMIN_LANG') ?? 'en';
         }
         \App::setLocale($lang);
 
-        if(\Auth::user()->hasVerifiedEmail()){
+        if (\Auth::user()->hasVerifiedEmail()) {
             return redirect()->intended(RouteServiceProvider::HOME);
         }
-        
+
         return view('auth.verify-email', compact('lang'));
     }
 

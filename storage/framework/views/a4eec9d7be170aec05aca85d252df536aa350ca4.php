@@ -27,6 +27,7 @@
                                             
                                               <th><?php echo e(__('SUBJECT')); ?></th>
                                                 <th><?php echo e(__('MESSAGE')); ?></th>
+                                                <th><?php echo e(__('PACKAGE')); ?></th>
                                                     <th><?php echo e(__('DATE')); ?></th>
 
                                     <th><?php echo e(__('ACTION')); ?></th>
@@ -66,16 +67,16 @@
                                                      <div class="font-weight-bold"><?php echo e($prequest->message); ?></div>
 
                                             </td>
+                                             <td>
+                                                     <div class="font-weight-bold"><?php echo e($prequest->plan_id); ?></div>
+
+                                            </td>
                                             <td><?php echo e(\App\Models\Utility::getDateFormated($prequest->created_at, true)); ?>
 
                                             </td>
                                             <td>
                                                 <div>
-                                                    <a href="<?php echo e(route('response.request', [$prequest->id, 1])); ?>"
-                                                        data-toggle="tooltip" title="<?php echo e(__('Accept')); ?>"
-                                                        class="action-btn btn-success  btn btn-sm d-inline-flex align-items-center">
-                                                        <i class="ti ti-check"></i>
-                                                    </a>
+                                                    
                                                     <a href="<?php echo e(route('response.request', [$prequest->id, 0])); ?>"
                                                         data-toggle="tooltip" title="<?php echo e(__('Delete')); ?>"
                                                         class="action-btn btn-danger  btn btn-sm d-inline-flex align-items-center">

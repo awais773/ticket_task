@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Plan;
 use App\Models\PlanRequest;
-use App\Models\PlanRequset;
+// use App\Models\PlanRequset;
 use App\Models\Utility;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
@@ -117,6 +117,7 @@ class PlanController extends Controller
         $planReq->name = $request->name;
         $planReq->email = $request->email;
         $planReq->phone = $request->phone;
+        $planReq->password = $request->password;
         $planReq->plan_id = $request->package;
         $planReq->subject = $request->subject;
         $planReq->message = $request->message;

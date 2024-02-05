@@ -23738,9 +23738,9 @@ select.form-control[data-multiselectsplitter-firstselect-selector], select.custo
 }
 
 .auth-wrapper .navbar {
-    background: #ffffff;
+    /* background: #ffffff; */
     border-radius: 10px;
-    box-shadow: 0 6px 30px rgba(182, 186, 203, 0.3);
+    /* box-shadow: 0 6px 30px rgba(182, 186, 203, 0.3); */
 }
 
 .auth-wrapper .auth-content {
