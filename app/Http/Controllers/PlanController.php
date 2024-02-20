@@ -2,9 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use Carbon\Carbon;
 use App\Models\Plan;
 use App\Models\Utility;
-use Carbon\Carbon;
+use App\Models\PlanRequest;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
@@ -327,5 +328,26 @@ class PlanController extends Controller
         {
             return redirect()->back()->with('error', __('Permission Denied.'));
         }
+    }
+
+
+    public function submit_contact(Request $request)
+    {
+        // dd($request->all());
+        $planReq = new PlanRequest();
+        $planReq->name = $request->name;
+        $planReq->email = $request->email;
+        $planReq->phone = $request->phone;
+        $planReq->plan_id = $request->package;
+        $planReq->subject = $request->subject;
+        $planReq->message = $request->message;
+
+        if ($planReq->save()) {
+            return redirect()->back()->with('success', __('Contact request created Successfully!'));
+        } else {
+            return redirect()->back()->with('error', __('Something is wrong'));
+        }
+
+        // return $plan->input();
     }
 }

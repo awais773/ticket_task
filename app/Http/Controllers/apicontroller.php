@@ -2,19 +2,20 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Plan;
+use App\Models\Task;
 use App\Models\User;
-use App\Traits\ApiResponser;
-use Illuminate\Http\Request;
-use App\Http\Controllers\Controller;
-use Illuminate\Support\Facades\Auth;
-use App\Models\UserProject;
 use App\Models\Project;
 use App\Models\Utility;
 use App\Models\Workspace;
-use App\Models\Task;
-use App\Models\UserWorkspace;
-use App\Models\TimeTracker;
 use App\Models\TrackPhoto;
+use App\Models\TimeTracker;
+use App\Models\UserProject;
+use App\Traits\ApiResponser;
+use Illuminate\Http\Request;
+use App\Models\UserWorkspace;
+use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
 
 
@@ -45,7 +46,7 @@ class apicontroller extends Controller
         return $this->success([
             'token' => auth()->user()->createToken('API Token')->plainTextToken,
             'user'=>auth()->user(),
-            'settings' =>$settings,
+            // 'settings' =>$settings,
         ],'Login successfully.');
     }
     public function logout()
@@ -232,5 +233,80 @@ class apicontroller extends Controller
         $new->save();
         return $this->success( [],'Uploaded successfully.');
     }
+
+    public function dashboard($slug = '')
+    {
+        $userObj = Auth::user();
+        $currentWorkspace = Utility::getWorkspaceBySlug($slug);
+        $totalProject = UserProject::join("projects", "projects.id", "=", "user_projects.project_id")->where("user_id", "=", $userObj->id)->where('projects.workspace', '=', $currentWorkspace->id)->count();
+        $workspace_owner = isset($currentWorkspace) ? $currentWorkspace->owner($currentWorkspace->id) : '';
+        $users = User::find($workspace_owner->id);
+        $plan = Plan::find($users->plan);
+        $storage_limit = $plan->storage_limit > 0 ? (($users->storage_limit / $plan->storage_limit) * 100) : 0;
+        $storage_limit = number_format( $storage_limit ,2 );
+        
+        if ($currentWorkspace->permission == 'Owner') {
+            $totalBugs = UserProject::join("bug_reports", "bug_reports.project_id", "=", "user_projects.project_id")->join("projects", "projects.id", "=", "user_projects.project_id")->where("user_id", "=", $userObj->id)->where('projects.workspace', '=', $currentWorkspace->id)->count();
+            $totalTask = UserProject::join("tasks", "tasks.project_id", "=", "user_projects.project_id")->join("projects", "projects.id", "=", "user_projects.project_id")->where("user_id", "=", $userObj->id)->where('projects.workspace', '=', $currentWorkspace->id)->count();
+        } else {
+            $totalBugs = UserProject::join("bug_reports", "bug_reports.project_id", "=", "user_projects.project_id")->join("projects", "projects.id", "=", "user_projects.project_id")->where("user_id", "=", $userObj->id)->where('projects.workspace', '=', $currentWorkspace->id)->where('bug_reports.assign_to', '=', $userObj->id)->count();
+            $totalTask = UserProject::join("tasks", "tasks.project_id", "=", "user_projects.project_id")->join("projects", "projects.id", "=", "user_projects.project_id")->where("user_id", "=", $userObj->id)->where('projects.workspace', '=', $currentWorkspace->id)->whereRaw("find_in_set('" . $userObj->id . "',tasks.assign_to)")->count();
+        }
+
+        $totalMembers = UserWorkspace::where('workspace_id', '=', $currentWorkspace->id)->count();
+        return response()->json([
+            'success' => true,
+            'message' => 'Data Fetch successfull',
+            'data' => [
+                'totalProject' => $totalProject,
+                'totalTask' => $totalTask,
+                'totalMembers' => $totalMembers,
+                'totalBugs' => $totalBugs,
+            ]
+        ], 200);
+        
+    }  
+
+
+    public function UserGet($slug = null)
+    {
+        $currentWorkspace = Utility::getWorkspaceBySlug($slug);
+        if($currentWorkspace)
+        {
+            $users = User::select('users.*', 'user_workspaces.permission', 'user_workspaces.is_active')->join('user_workspaces', 'user_workspaces.user_id', '=', 'users.id');
+            $users->where('user_workspaces.workspace_id', '=', $currentWorkspace->id);
+            $users = $users->get();
+        }
+        else
+        {
+            $users = User::where('type', '!=', 'admin')->get();
+        }
+        return response()->json([
+            'success' => true,
+            'message' => 'Data Fetch successfull',
+              'date'  =>$users,
+            //   'currentWorkspace'  =>$currentWorkspace,
+        ], 200);
+    }
+
+
+    
+    public function GroupDepartmenProject($slug = '')
+    {
+        $objUser = Auth::user();
+        $currentWorkspace = Utility::getWorkspaceBySlug($slug);
+        if ($objUser->getGuard() == 'client') {
+            $projects = Project::select('projects.*')->join('client_projects', 'projects.id', '=', 'client_projects.project_id')->where('client_projects.client_id', '=', $objUser->id)->where('projects.workspace', '=', $currentWorkspace->id)->get();
+        } else {
+            $projects = Project::select('projects.*')->join('user_projects', 'projects.id', '=', 'user_projects.project_id')->where('user_projects.user_id', '=', $objUser->id)->where('projects.workspace', '=', $currentWorkspace->id)->get();
+        }
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Data Fetch successfull',
+              'date'  =>$projects,
+            //   'currentWorkspace'  =>$currentWorkspace,
+        ], 200);    }
+    
 
 }

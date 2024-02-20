@@ -87,9 +87,9 @@
                                 class="list-group-item list-group-item-action border-0">{{ __('Company Settings') }} <div
                                     class="float-end"><i class="ti ti-chevron-right"></i></div></a>
 
-                            <a href="#payment-settings"
+                            {{-- <a href="#payment-settings"
                                 class="list-group-item list-group-item-action border-0">{{ __('Payment Settings') }} <div
-                                    class="float-end"><i class="ti ti-chevron-right"></i></div></a>
+                                    class="float-end"><i class="ti ti-chevron-right"></i></div></a> --}}
 
                             <a href="#invoice-settings"
                                 class="list-group-item list-group-item-action border-0">{{ __('Invoice Settings') }} <div
@@ -99,16 +99,16 @@
                                 class="list-group-item list-group-item-action border-0">{{ __('Email Notification Settings') }}
                                 <div class="float-end"><i class="ti ti-chevron-right"></i></div></a>
 
-                            <a href="#time-tracker-settings"
+                            {{-- <a href="#time-tracker-settings"
                                 class="list-group-item list-group-item-action border-0">{{ __('Time Tracker Settings') }}
                                 <div class="float-end"><i class="ti ti-chevron-right"></i></div></a>
 
                             <a href="#zoom-meeting-settings"
                                 class="list-group-item list-group-item-action border-0">{{ __('Zoom Meeting Settings') }}
-                                <div class="float-end"><i class="ti ti-chevron-right"></i></div></a>
+                                <div class="float-end"><i class="ti ti-chevron-right"></i></div></a> --}}
 
                             @if (Auth::user()->type == 'user')
-                                <a href="#slack-settings"
+                                {{-- <a href="#slack-settings"
                                     class="list-group-item list-group-item-action border-0">{{ __('Slack Settings') }}<div
                                         class="float-end"><i class="ti ti-chevron-right"></i></div></a>
 
@@ -125,7 +125,7 @@
                                 <div class="float-end"><i class="ti ti-chevron-right"></i></div></a>
                                 <a href="#email-settings"
                                 class="list-group-item list-group-item-action border-0 ">{{ __('Email Settings') }} <div
-                                    class="float-end"><i class="ti ti-chevron-right"></i></div></a>
+                                    class="float-end"><i class="ti ti-chevron-right"></i></div></a> --}}
                             @endif
                         </div>
                     </div>
@@ -636,7 +636,7 @@
                         </div>
                     </div>
 
-                    <div id="payment-settings" class="faq">
+                    {{-- <div id="payment-settings" class="faq">
                         <div class="row justify-content-center">
                             <div class="col-md-12">
                                 <div class="card">
@@ -680,39 +680,7 @@
                                                 <div class="col-12">
                                                     <div class="accordion accordion-flush setting-accordion" id="payment-gateways">
                                                         
-                                                        <!-- Bank Transfer -->
-                                                        {{-- <div class="accordion-item">
-                                                            <h6 class="accordion-header py-3 px-2" id="headingOne">
-                                                                <div class="d-flex justify-content-between">
-                                                                    <span class="col-6 px-3 d-flex align-items-center">{{ __('Bank Transfer') }}</span>
-                                                                    <div class="text-end d-flex col-auto">
-                                                                        <span class="col-auto px-3 d-flex align-items-center">{{__('Enable:')}}</span>
-                                                                        <div class="col form-check form-switch custom-switch-v1">
-                                                                            <input type="hidden" name="is_bank_enabled" value="off">
-                                                                            <input type="checkbox" class="form-check-input " data-bs-toggle="collapse"
-                                                                            data-bs-target="#collapse101" aria-expanded="false" aria-controls="collapseOne"
-                                                                            name="is_bank_enabled" id="is_bank_enabled"
-                                                                            {{ isset($payment_detail['is_bank_enabled']) && $payment_detail['is_bank_enabled'] == 'on' ? 'checked="checked"' : '' }}>
-                                                                            <label class="custom-control-label form-label"
-                                                                            for="is_bank_enabled"></label>
-                                                                        </div>
-                                                                    </div>
-                                                                </div>
-                                                            </h6>
-                                                            <div id="collapse101" class="accordion-collapse collapse" aria-labelledby="headingOne" data-bs-parent="#accordionExample">
-                                                                <div class="accordion-body">
-                                                                    <div class="form-group p-2">
-                                                                        {{ Form::label('bank_details', __('Bank Details'), ['class' => 'form-label']) }}
-                                                                        {{ Form::textarea('bank_details',isset($payment_detail['bank_details']) ? $payment_detail['bank_details'] : '',['class' => 'form-control', 'rows'=>'6' , 'placeholder' => __('Bank Transfer Details')]) }}
-                                                                        <small class="text-muted">
-                                                                            {{__('Example:bank:bank name</br> Account Number:0000 0000</br>')}}
-                                                                        </small>
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-                                                        </div> --}}
-
-                                                        <!-- Bank Transfer -->
+                                                      
                                                         <div class="accordion-item">
                                                             <h2 class="accordion-header" id="headingOne">
                                                                 <button class="accordion-button collapsed" type="button" >
@@ -2423,7 +2391,7 @@
                                 </div>
                             </div>
                         </div>
-                    </div>
+                    </div> --}}
 
                     <div id="invoice-settings" class="tab-pane">
                         <div class="">
@@ -2608,7 +2576,7 @@
                         </div>
                     </div>
 
-                    <div id="time-tracker-settings" class="">
+                    {{-- <div id="time-tracker-settings" class="">
                         <div class="row justify-content-center">
                             <div class="col-md-12">
                                 <div class="card">
@@ -2647,8 +2615,8 @@
                                 </div>
                             </div>
                         </div>
-                    </div>
-
+                    </div> --}}
+{{-- 
                     <div id="zoom-meeting-settings" class="">
                         <div class="row justify-content-center">
                             <div class="col-md-12">
@@ -2699,9 +2667,9 @@
                                 </div>
                             </div>
                         </div>
-                    </div>
+                    </div> --}}
 
-                    @if (Auth::user()->type == 'user')
+                    {{-- @if (Auth::user()->type == 'user')
                         <div class="" id="slack-settings">
                             {{ Form::open(['route' => ['workspace.settings.Slack', $currentWorkspace->slug], 'method' => 'post', 'class' => 'd-contents']) }}
                             <div class="row justify-content-center">
@@ -2842,9 +2810,9 @@
                             </div>
                             {{ Form::close() }}
                         </div>
-                    @endif
+                    @endif --}}
 
-                    @if (Auth::user()->type == 'user')
+                    {{-- @if (Auth::user()->type == 'user')
                         <div class="" id="telegram-settings">
                             {{ Form::open(['route' => ['workspace.settings.telegram', $currentWorkspace->slug], 'method' => 'post', 'class' => 'd-contents']) }}
                             <div class="row justify-content-center">
@@ -2988,9 +2956,9 @@
                             </div>
                             {{ Form::close() }}
                         </div>
-                    @endif
+                    @endif --}}
 
-                    @if(Auth::user()->type == 'user')
+                    {{-- @if(Auth::user()->type == 'user')
                     <div class="" id="google-calender">
                         {{ Form::open(['route' => ['google.calender.settings', $currentWorkspace->slug], 'method' => 'post', 'enctype' => 'multipart/form-data']) }}
                         <div class="row justify-content-center">
@@ -3038,10 +3006,10 @@
                             </div>
                         </div>
                     </div>
-                    @endif
+                    @endif --}}
 
                     <!--Webhook_Setting-->
-                    <div id="webhook-settings" class="card">
+                    {{-- <div id="webhook-settings" class="card">
                         <div class="row justify-content-center">
                             <div class="col-md-12">
                                 <div class="card-header">
@@ -3068,7 +3036,6 @@
                                         <table class="table">
                                             <thead>
                                                 <tr>
-                                                    {{-- <th scope="sort">{{ __('Id') }}</th> --}}
                                                     <th scope="sort">{{ __('Module') }}</th>
                                                     <th scope="sort">{{ __('Url') }}</th>
                                                     <th scope="sort">{{ __('Method') }}</th>
@@ -3079,7 +3046,6 @@
                                                 @php
                                                     $webhook = App\Models\Webhook::where('created_by','=', $currentWorkspace->id)->get();
                                                 @endphp
-                                                    {{-- @if (!empty($webhook) && count($webhook) > 0) --}}
                                                     @foreach ($webhook as $data)
                                                         <tr>
                                                             <td>{{$data->module}}</td>
@@ -3112,25 +3078,14 @@
                                                             </td>
                                                         </tr>
                                                     @endforeach
-                                                {{-- @else
-                                                    <tr>
-                                                        <td colspan="4">
-                                                            <div class="text-center">
-                                                                <i class="fas fa-user-slash text-primary fs-40"></i>
-                                                                <h2>{{ __('Opps...') }}</h2>
-                                                                <h6> {!! __('No data request found...!') !!} </h6>
-                                                            </div>
-                                                        </td>
-                                                    </tr>
-                                                @endif --}}
                                             </tbody>
                                         </table>
                                     </div>
                                 </div>
                             </div>
                         </div>
-                    </div>
-
+                    </div> --}}
+{{-- 
                     <div id="email-settings" class="tab-pane">
                         <div class="col-md-12">
 
@@ -3241,7 +3196,7 @@
                                 </div>
                             </div>
                         </div>
-                    </div>
+                    </div> --}}
 
                 </div>
             </div>

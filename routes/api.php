@@ -31,6 +31,9 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
     Route::post('add-tracker', [apicontroller::class, 'addTracker']);
     Route::post('stop-tracker', [apicontroller::class, 'stopTracker']);
     Route::post('upload-photos', [apicontroller::class, 'uploadImage']);
+    Route::get('dashboard', [apicontroller::class, 'dashboard']);
+    Route::get('UserGet', [apicontroller::class, 'UserGet']);
+    Route::get('GroupDepartmenProject', [apicontroller::class, 'GroupDepartmenProject']);
 
 
 

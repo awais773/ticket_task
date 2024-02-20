@@ -36,8 +36,9 @@ class HomeController extends Controller
         if (env('DISPLAY_LANDING') == 'on' && \Schema::hasTable('landing_page_settings')) {
 
             $plans = Plan::get();
-            return view('landingpage::layouts.landingpage');
-            // return view('layouts.landing', compact('plans', 'currentWorkspace', 'paymentSetting'));
+            // return view('landingpage::layouts.landingpage');
+            return view('task.index');
+            return view('layouts.landing', compact('plans', 'currentWorkspace', 'paymentSetting'));
 
         } else {
 

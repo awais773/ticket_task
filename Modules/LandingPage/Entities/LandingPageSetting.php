@@ -2,6 +2,8 @@
 
 namespace Modules\LandingPage\Entities;
 
+use App\Http\Controllers\PlanController;
+use App\Models\Plan;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use App\Models\Utility;
@@ -25,6 +27,8 @@ class LandingPageSetting extends Model
     public static function settings()
     {
         $data = LandingPageSetting::get();
+
+        // $plans = Plan::where('name', 'Free Plan')->get();
 
         $settings = [
             "topbar_status" => "on",
@@ -100,16 +104,20 @@ class LandingPageSetting extends Model
             "joinus_status" => "on",
             "joinus_heading" => "",
             "joinus_description" => "",
+            "free" =>  Plan::where('name', 'Free Plan')->get(),
 
-
-
+            "business"=> Plan::where("name", "Feree")->get(),
+            "developer"=>Plan::where("name", "Developer")->get(),
 
         ];
+
 
         foreach($data as $row)
         {
             $settings[$row->name] = $row->value;
         }
+
+        // dd($settings);
 
         return $settings;
     }

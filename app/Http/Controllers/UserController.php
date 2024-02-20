@@ -271,6 +271,8 @@ class UserController extends Controller
                     'password'          => Hash::make($request->password),
                     'email_verified_at' => date('Y-m-d H:i:s'),
                     'lang'              => (env('DEFAULT_ADMIN_LANG')) ? env('DEFAULT_ADMIN_LANG') : 'en',
+                    'user_type'             => 'company',
+
                 ]
             );
             // dd($objUser);
@@ -764,6 +766,7 @@ class UserController extends Controller
                     $arrUser                      = [];
                     $arrUser['name']              = $name;
                     $arrUser['email']             = $email;
+                    $arrUser['user_type']          = 'user';
                     $arrUser['password']          = Hash::make($password);
                     $arrUser['currant_workspace'] = $currentWorkspace->id;
                     $arrUser['email_verified_at'] = $verify;
@@ -771,7 +774,6 @@ class UserController extends Controller
                     $registerUsers                = User::create($arrUser);
                     $assignPlan                   = $registerUsers->assignPlan(1);
                     $registerUsers->password      = $password;
-
                     if(!$assignPlan['is_success'])
                     {
                         return json_encode(
