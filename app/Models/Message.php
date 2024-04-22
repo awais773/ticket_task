@@ -6,13 +6,9 @@ use Illuminate\Database\Eloquent\Model;
 
 class Message extends Model
 {
-    protected $fillable = [
-        'from',
-        'to',
-        'message',
-        'is_read',
-    ];
+    protected $table = 'ch_messages';
+    protected $guarded = [];
     public function from_data(){
-        return $this->hasOne('App\Models\User','id','from');
+        return $this->hasOne('App\Models\User','id','from_id');
     }
 }

@@ -11,10 +11,10 @@ class Note extends Model
     ];
 
     // protected $guarded = [];
-    // public function users()
-    // {
-    //     return $this->hasOne('App\Models\User', 'id', 'created_by');
-    // }
+    public function usersShow()
+    {
+        return $this->hasOne('App\Models\User', 'id', 'created_by');
+    }
 
     public function users()
     {

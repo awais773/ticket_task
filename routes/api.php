@@ -34,8 +34,52 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
     Route::get('dashboard', [apicontroller::class, 'dashboard']);
     Route::get('UserGet', [apicontroller::class, 'UserGet']);
     Route::get('GroupDepartmenProject', [apicontroller::class, 'GroupDepartmenProject']);
+    Route::get('requestedTask', [apicontroller::class, 'requestedTask']);
+    Route::get('requestedTaskUser', [apicontroller::class, 'requestedTaskUser']);
+    Route::get('requestedTaskUser', [apicontroller::class, 'requestedTaskUser']);
+
+    Route::get('showProject/{id}', [apicontroller::class, 'showProject']);
+    Route::delete('destroyProject/{id}', [apicontroller::class, 'destroyProject']);
+    Route::post('updateProject/{id}', [apicontroller::class, 'updateProject']);
+
+    Route::get('employeeEvaluation', [apicontroller::class, 'employeeEvaluation']);
+    Route::post('addPromotion/{id}', [apicontroller::class, 'addPromotion']);
+
+    //chat
+    Route::get('chatUser', [apicontroller::class, 'chatIndex']);
+    Route::get('getMessage/{user_id}', [apicontroller::class, 'getMessage']);
+    Route::post('sendMessage', [apicontroller::class, 'sendMessage']);
+
+    /// project report
+    Route::get('ProjectReport', [apicontroller::class, 'ProjectReport']);
+    Route::post('ProjectReportShow/{id}', [apicontroller::class, 'ProjectReportShow']);
 
 
+          /// task
+    Route::post('allTasks', [apicontroller::class, 'allTasks']);
+    Route::get('getTaskShow/{project_id}', [apicontroller::class, 'getTaskShow']);
+    Route::post('taskStore/{id}', [apicontroller::class, 'taskStore']);
+    Route::post('taskOrderUpdate/{id}', [apicontroller::class, 'updateTaskOrder']);
+    Route::post('ProjectStore', [apicontroller::class, 'ProjectStore']);
+
+    ///taskboard
+    Route::get('taskBoard/{id}', [apicontroller::class, 'taskBoard']);
+    Route::post('commentsAdd/{id}', [apicontroller::class, 'commentsAdd']);
+    Route::get('getComments/{id}', [apicontroller::class, 'getComments']);
+    Route::get('notificationSeen', [apicontroller::class, 'notificationSeen']);
+    Route::get('notificationcount', [apicontroller::class, 'notificationcount']);
+    Route::get('projectStatus', [apicontroller::class, 'projectStatus']);
+
+
+    Route::delete('deleteAccount/{id}', [apicontroller::class, 'delete']);
+
+
+
+
+
+
+
+    
 
 
     // Route::post('logout', 'apicontroller@logout');

@@ -19,6 +19,10 @@
 
     @endauth
 @endsection
+@php
+    $logo=\App\Models\Utility::get_file('users-avatar/');
+
+@endphp
 
 @section('content')
 

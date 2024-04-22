@@ -892,7 +892,7 @@ class UserController extends Controller
             {
                 $users = User::select('users.*', 'user_workspaces.permission', 'user_workspaces.is_active')->join('user_workspaces', 'user_workspaces.user_id', '=', 'users.id');
                 $users->where('user_workspaces.workspace_id', '=', $currentWorkspace->id)->where('users.id', '!=', $objUser->id);
-                $users = $users->get();
+                $users = $users->select('name', 'avatar')->get();
             }
             else
             {

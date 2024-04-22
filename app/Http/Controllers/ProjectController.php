@@ -276,7 +276,6 @@ class ProjectController extends Controller
                     //     // return redirect()->back()->with('error', __('Webhook call failed.'));
                     // }
                 }
-
                 return redirect()->route('projects.index', $currentWorkspace->slug)->with('success', __('Project Created Successfully!') . ((isset($smtp_error)) ? ' <br> <span class="text-danger">' . $smtp_error . '</span>' : ''));
             } else {
                 return redirect()->back()->with('error', __('Your project limit is over, Please upgrade plan.'));
