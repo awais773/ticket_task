@@ -259,14 +259,13 @@
                                                 </div>
                                             </div>
                                             
-                                            <h4 class="small-title mb-4">Theme Customizer</h4>
+                                            <h4 class="small-title mb-4"> {{ __('Theme Customizer') }} </h4>
                                             <div class="col-12">
                                                 <div class="pct-body">
                                                     <div class="row">
                                                         <div class="col-sm-4">
                                                             <h6 class="">
-                                                                <i data-feather="credit-card" class="me-2"></i>Primary
-                                                                color settings
+                                                                <i data-feather="credit-card" class="me-2"></i>{{ __('Primary color settings') }}
                                                             </h6>
                                                             <hr class="my-2" />
                                                             <div class="theme-color themes-color">
@@ -296,8 +295,7 @@
                                                         </div>
                                                         <div class="col-sm-3">
                                                             <h6 class="">
-                                                                <i data-feather="layout" class="me-2"></i>Sidebar
-                                                                settings
+                                                                <i data-feather="layout" class="me-2"></i>{{ __('Sidebar settings') }}
                                                             </h6>
                                                             <hr class="my-2" />
                                                             <div class="form-check form-switch">
@@ -305,12 +303,12 @@
                                                                     id="cust-theme-bg" name="cust_theme_bg"
                                                                     @if ($cust_theme_bg == 'on') checked @endif />
                                                                 <label class="form-check-label f-w-600 pl-1"
-                                                                    for="cust-theme-bg">Transparent layout</label>
+                                                                    for="cust-theme-bg"> {{ __('Transparent Layout') }} </label>
                                                             </div>
                                                         </div>
                                                         <div class="col-sm-3">
                                                             <h6 class="">
-                                                                <i data-feather="sun" class=""></i>Layout settings
+                                                                <i data-feather="sun" class=""></i>{{ __('Layout settings') }}
                                                             </h6>
                                                             <hr class="my-2" />
                                                             <div class="form-check form-switch mt-2">
@@ -319,7 +317,7 @@
                                                                     @if ($dark_mode == 'on') checked @endif />
 
                                                                 <label class="form-check-label f-w-600 pl-1"
-                                                                    for="cust-darklayout">Dark Layout</label>
+                                                                        for="cust-darklayout"> {{ __('Dark Layout') }} </label>
                                                             </div>
                                                         </div>
                                                         <div class="col-sm-2">

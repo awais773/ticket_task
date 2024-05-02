@@ -181,8 +181,8 @@
                                 <div class="bg-primary proj-add-icon">
                                 <i class="ti ti-plus"></i>
                                 </div>
-                                <h6 class="mt-4 mb-2">Add Project</h6>
-                                <p class="text-muted text-center">Click here to add New Project</p>
+                                <h6 class="mt-4 mb-2">{{ __('Add Project') }} </h6>
+                                <p class="text-muted text-center"> {{ __('Click here to add New Project') }}</p>
                                 </a>
                                 </div>
                             @endif

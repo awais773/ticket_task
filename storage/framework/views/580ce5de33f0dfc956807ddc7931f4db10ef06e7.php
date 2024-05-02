@@ -88,7 +88,7 @@
             <?php endif; ?>
           <li class="dash-item <?php echo e((Request::route()->getName() == 'projects.index' || Request::segment(2) == 'projects') ? ' active' : ''); ?>">
             <a href="<?php echo e(route('projects.index',$currentWorkspace->slug)); ?>" class="dash-link"><span class="dash-micon"> <i data-feather="briefcase"></i></span><span
-                    class="dash-mtext"><?php echo e(__(' Group/Department ')); ?></span></a>
+                    class="dash-mtext"><?php echo e(__('Group/Department')); ?></span></a>
           </li>
           <li class="dash-item <?php echo e((Request::route()->getName() == 'tasks.index') ? ' active' : ''); ?>">
             <a href="<?php echo e(route('tasks.index',$currentWorkspace->slug)); ?>" class="dash-link "><span class="dash-micon"><i data-feather="list"></i></span><span

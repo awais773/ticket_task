@@ -63,7 +63,7 @@
                                                     class="badge badge-secondary rounded-pill count">{{ $stage->bugs->count() }}</span>
                                             </button>
                                         </div>
-                                        <h4 class="mb-0">{{ $stage->name }}</h4>
+                                        <h4 class="mb-0">  {{ $stage->name }}</h4>
 
                                     </div>
                                     <div id="{{ 'task-list-' . str_replace(' ', '_', $stage->id) }}"

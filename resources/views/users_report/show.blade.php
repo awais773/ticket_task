@@ -45,13 +45,13 @@
 @section('content')
 <div id="printableArea">
 <div class="row">
-    <h2 class="mb-0" style="text-align: center" >{{ __('Evaluation of  Employee') }}</h2>
+    <h2 class="mb-0" style="text-align: center" >{{ __('Evaluation of Employee') }}</h2>
 </div>
 <br>
 <br>
 <div class="row">
-    <p class="mb-0"><strong>Name: </strong>  {{ $objUser->name }}</p>
-    <p class="mb-0"><strong>Email: </strong>  {{ $objUser->email }}</p>
+    <p class="mb-0"><strong>{{ __('Name') }}: </strong>  {{ $objUser->name }}</p>
+    <p class="mb-0"><strong>{{ __('Email') }}: </strong>  {{ $objUser->email }}</p>
 </div>
 <br>
 <br>
@@ -74,12 +74,12 @@
         <br>
         <br>
         <br>
-        <h5 class="mb-0">{{ __('Name Of Employee ......................') }}</h5>
+        <h5 class="mb-0">{{ __('Name Of Employee') }}......................</h5>
         <br>
         <br>
         <br>
         <br>
-        <h5 class="mb-0">{{ __('Name Of Manager ........................') }}</h5>
+        <h5 class="mb-0">{{ __('Name Of Manager') }} ........................</h5>
 
     </div>
     
@@ -88,15 +88,15 @@
 <div class="row">
     <div class="col-sm-6">
         <br>
-        <h5 class="mb-0">{{ __('Employee Signature ......................') }}</h5>
+        <h5 class="mb-0">{{ __('Employee Signature') }}......................</h5>
         <br>
-        <h5 class="mb-0">{{ __('Manager Signature ........................') }}</h5>
+        <h5 class="mb-0">{{ __('Manager Signature') }}........................</h5>
     </div>
     <div class="col-sm-6">
         <br>
-        <h5 class="mb-0">{{ __('Date Evulation ......................') }}</h5>
+        <h5 class="mb-0">{{ __('Date Evulation') }}......................</h5>
         <br>
-        <h5 class="mb-0">{{ __('Date Evulation ........................') }}</h5>
+        <h5 class="mb-0">{{ __('Date Evulation') }}........................</h5>
 
     </div>
     
@@ -171,7 +171,7 @@
             data: {
                 labels: months, // Set the x-axis labels to all twelve months
                 datasets: [{
-                    label: '# of Reports',
+                    label: {{ __('# of Reports') }},
                     data: values, // Set the y-axis values
                     backgroundColor: [
                         'rgba(255, 99, 132, 0.2)',

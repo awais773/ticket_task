@@ -93,7 +93,7 @@
             @endif
           <li class="dash-item {{ (Request::route()->getName() == 'projects.index' || Request::segment(2) == 'projects') ? ' active' : '' }}">
             <a href="{{ route('projects.index',$currentWorkspace->slug) }}" class="dash-link"><span class="dash-micon"> <i data-feather="briefcase"></i></span><span
-                    class="dash-mtext">{{ __(' Group/Department ') }}</span></a>
+                    class="dash-mtext">{{ __('Group/Department') }}</span></a>
           </li>
           <li class="dash-item {{ (Request::route()->getName() == 'tasks.index') ? ' active' : '' }}">
             <a href="{{ route('tasks.index',$currentWorkspace->slug) }}" class="dash-link "><span class="dash-micon"><i data-feather="list"></i></span><span

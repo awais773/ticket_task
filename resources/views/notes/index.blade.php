@@ -1,6 +1,6 @@
 @extends('layouts.admin')
 
-@section('page-title') {{__(' Request Task')}} @endsection
+@section('page-title') {{__('Request Task')}} @endsection
 @section('links')
 @if(\Auth::guard('client')->check())   
 <li class="breadcrumb-item"><a href="{{route('client.home')}}">{{__('Home')}}</a></li>

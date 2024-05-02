@@ -428,8 +428,7 @@
                                 <div class="card-header" style="padding: 25px 35px !important;">
                                     <div class="d-flex justify-content-between align-items-center">
                                         <div class="row">
-                                            <h5 class="mb-0">{{ __('Progress') }}<span class="text-end"> (Last Week
-                                                    Tasks) </span></h5>
+                                            <h5 class="mb-0">{{ __('Progress') }}<span class="text-end"> ({{ __('Last Week Tasks') }})</span></h5>
 
                                         </div>
                                     </div>

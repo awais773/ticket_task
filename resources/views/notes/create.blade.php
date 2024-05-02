@@ -49,11 +49,11 @@ else{
            <div class="selectgroup w-50 ">
                 <label class="selectgroup-item">
                     <input type="radio" name="type" value="personal" class="selectgroup-input" checked="checked">
-                    <span class="selectgroup-button">Personal</span>
+                    <span class="selectgroup-button">{{ __('Personal') }}</span>
                 </label>
                 <label class="selectgroup-item">
                     <input type="radio" name="type" value="shared" class="selectgroup-input">
-                    <span class="selectgroup-button">Shared</span>
+                    <span class="selectgroup-button">{{ __('Shared') }}</span>
                 </label>
             </div>
         </div>
