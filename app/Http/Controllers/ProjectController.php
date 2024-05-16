@@ -1000,7 +1000,6 @@ class ProjectController extends Controller
     {
         $objUser = Auth::user();
         $task = Task::where('id', $taskID)->delete();
-
         return redirect()->back()->with('success', __('Task Deleted Successfully!'));
     }
 

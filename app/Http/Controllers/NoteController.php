@@ -2,9 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use random;
 use App\Models\Note;
 use App\Models\User;
 use App\Models\Utility;
+use Milon\Barcode\DNS1D;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -22,10 +24,8 @@ class NoteController extends Controller
         $shared_notes = Note::where('type','=','shared')->where('workspace','=',$currentWorkspace->id)
                             ->whereRaw("find_in_set('".Auth::user()->id."',notes.assign_to)")
                             ->get();
-
         return view('notes.index',compact('currentWorkspace','personal_notes', 'shared_notes'));
     }
-
     /**
      * Show the form for creating a new resource.
      *
@@ -63,12 +63,17 @@ class NoteController extends Controller
                                'text' => 'required',
                                'color' => 'required',
                            ]);
-        $currentWorkspace = Utility::getWorkspaceBySlug($slug);
+                           $barcode = new DNS1D();
+                           $barcode->setStorPath(storage_path('app/public/barcodes'));
+                           $barcode_value = rand(1000000, 9999999); // Generate a random string
+                   
+                           $barcode->getBarcodePNG($barcode_value, 'C128');      
+                           $currentWorkspace = Utility::getWorkspaceBySlug($slug);
         $objUser = Auth::user();
         $post = $request->all();
         $post['type'] = $request->type;
-
         $assign_to = $request->assign_to;
+        $post['barcode'] = $barcode_value;
         $assign_to[] = Auth::user()->id;
         $post['assign_to'] = implode(',', $assign_to);
         $post['workspace'] = $currentWorkspace->id;
@@ -131,12 +136,20 @@ class NoteController extends Controller
                                'text' => 'required',
                                'color' => 'required',
                            ]);
+
+                           $barcode = new DNS1D();
+                           $barcode->setStorPath(storage_path('app/public/barcodes'));
+                           $barcode_value = rand(1000000, 9999999); // Generate a random string
+                   
+                           $barcode->getBarcodePNG($barcode_value, 'C128');      
+                           $currentWorkspace = Utility::getWorkspaceBySlug($slug);
         $objUser = Auth::user();
         $currentWorkspace = Utility::getWorkspaceBySlug($slug);
         $notes = Note::where('workspace','=',$currentWorkspace->id)->where('created_by','=',Auth::user()->id)->where('id','=',$noteID)->first();
 
         $post = $request->all();
         $post['type'] = $request->type;
+        $post['barcode'] = $barcode_value;
 
         $assign_to = $request->assign_to;
         $assign_to[] = Auth::user()->id;

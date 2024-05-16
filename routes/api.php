@@ -22,6 +22,7 @@ use App\Http\Controllers\apicontroller;
 Route::get('login', 'apicontroller@login');
 
 Route::post('login', [apicontroller::class, 'login']);
+Route::post('/update/profile/{id}', [apicontroller::class, 'updateProfile']);
 
 
 Route::group(['middleware' => ['auth:sanctum']], function () {
@@ -35,6 +36,8 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
     Route::get('UserGet', [apicontroller::class, 'UserGet']);
     Route::get('GroupDepartmenProject', [apicontroller::class, 'GroupDepartmenProject']);
     Route::get('requestedTask', [apicontroller::class, 'requestedTask']);
+    Route::get('requestedTaskId/{id}', [apicontroller::class, 'requestedTaskId']);
+    Route::delete('NotesDelete/{id}', [apicontroller::class, 'NotesDelete']);
     Route::get('requestedTaskUser', [apicontroller::class, 'requestedTaskUser']);
     Route::get('requestedTaskUser', [apicontroller::class, 'requestedTaskUser']);
 
@@ -62,6 +65,10 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
     Route::post('taskOrderUpdate/{id}', [apicontroller::class, 'updateTaskOrder']);
     Route::post('ProjectStore', [apicontroller::class, 'ProjectStore']);
 
+    Route::delete('taskDestroy/{id}', [apicontroller::class, 'taskDestroy']);
+    Route::post('taskUpdate/{projectId}/{taskId}', [apicontroller::class, 'taskUpdate']);
+
+
     ///taskboard
     Route::get('taskBoard/{id}', [apicontroller::class, 'taskBoard']);
     Route::post('commentsAdd/{id}', [apicontroller::class, 'commentsAdd']);
@@ -72,6 +79,16 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
 
 
     Route::delete('deleteAccount/{id}', [apicontroller::class, 'delete']);
+    Route::post('scanTasks', [apicontroller::class, 'scanTasks']);
+
+//// subtask
+Route::post('subTaskStore/{id}', [apicontroller::class, 'subTaskStore']);
+Route::post('subTaskUpdate/{id}', [apicontroller::class, 'subTaskUpdate']);
+Route::delete('subTaskDestroy/{id}', [apicontroller::class, 'subTaskDestroy']);
+Route::get('subTaskGet/{id}', [apicontroller::class, 'subTaskGet']);
+
+
+
 
 
 

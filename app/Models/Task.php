@@ -17,11 +17,29 @@ class Task extends Model
         'milestone_id',
         'status',
         'order',
+        'created_by',
+        'updated_status',
     ];
 
     public function project()
     {
         return $this->hasOne('App\Models\Project', 'id', 'project_id');
+    }
+
+    public function taskCreate(){
+        return $this->hasOne('App\Models\User', 'id', 'created_by');
+
+    }
+
+    public function updated_status(){
+        return $this->hasOne('App\Models\User', 'id', 'updated_status');
+
+    }
+
+    public function assignees()
+    {
+        $userIds = explode(',', $this->assign_to);
+        return User::whereIn('id', $userIds)->get();
     }
 
     public function users()

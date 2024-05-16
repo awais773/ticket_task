@@ -36,10 +36,14 @@ use GrahamCampbell\ResultType\Success;
 use Illuminate\Support\Facades\Validator;
 use App\Models\Mail\SendWorkspaceInvication;
 use App\Models\Notification;
+use App\Models\SubTask;
 
 class apicontroller extends Controller
 {
     use ApiResponser;
+    private $success = false;
+    private $message = '';
+    private $data = [];
 
     public function login(Request $request)
     {
@@ -54,16 +58,18 @@ class apicontroller extends Controller
 
         $user = Auth::user();
         $workspace_id = $user->currant_workspace;
+        $companyName = User::where('currant_workspace', $workspace_id)->where('user_type', 'company')->pluck('name')->first();
         $getworkspace = Workspace::where("id", $workspace_id)->first();
 
         $settings = [
 
             'shot_time' => isset($getworkspace->interval_time) ? $getworkspace->interval_time : 10,
         ];
+        $user->makeHidden(['storage_limit']);
 
         return $this->success([
             'token' => auth()->user()->createToken('API Token')->plainTextToken,
-            'user' => auth()->user(),
+            'user' => array_merge(auth()->user()->toArray(), ['companyName' => $companyName]),
             // 'settings' =>$settings,
         ], 'Login successfully.');
     }
@@ -296,6 +302,7 @@ class apicontroller extends Controller
             $users = User::select('users.*', 'user_workspaces.permission', 'user_workspaces.is_active')->join('user_workspaces', 'user_workspaces.user_id', '=', 'users.id');
             $users->where('user_workspaces.workspace_id', '=', $currentWorkspace->id);
             $users = $users->get();
+            $users->makeHidden(['storage_limit']);
         } else {
             $users = User::where('type', '!=', 'admin')->get();
         }
@@ -386,33 +393,145 @@ class apicontroller extends Controller
         //  return view('notes.index',compact('currentWorkspace','personal_notes', 'shared_notes'));
     }
 
-    public function requestedTaskStore(Request $request, $slug = '')
+
+    
+    public function requestedTaskId($id ,$slug = '')
     {
-        $request->validate([
-            'title' => 'required',
-            'text' => 'required',
-            'color' => 'required',
-        ]);
-
         $currentWorkspace = Utility::getWorkspaceBySlug($slug);
-        $objUser = Auth::user();
-        $post = $request->all();
-        $post['type'] = $request->type;
 
-        $assign_to = $request->assign_to;
-        // $assign_to[] = $objUser->id;
-        $post['assign_to'] = implode(',', $assign_to);
-        $post['workspace'] = $currentWorkspace->id;
-        $post['created_by'] = $objUser->id;
-
-        $note = Note::create($post);
-
+        $shared_notes = Note::with('usersShow:id,name,avatar')->where('workspace', '=', $currentWorkspace->id)
+            ->whereRaw("find_in_set('" . Auth::user()->id . "',notes.assign_to)")
+            ->where('id', '=', $id)->first();
         return response()->json([
             'success' => true,
-            'message' => 'Note created successfully',
-            'data'    => $note,
-        ], 201);
+            'message' => 'Data Fetch successfull',
+            'date'  => $shared_notes,
+            //   'currentWorkspace'  =>$currentWorkspace,
+        ], 200);
+
+        //  return view('notes.index',compact('currentWorkspace','personal_notes', 'shared_notes'));
     }
+
+
+    public function NotesDelete(Request $request,$id){
+        if(Note::find($id)){
+            Note::find($id)->delete();
+          return response()->json(['
+          message' => 'Data deleted successfully !', 
+          'success' => true,
+          'code'=>200]);
+        }else{
+          return response()->json(['message' => 'Operation Failed !', 
+          'success' => false,
+          'code'=>501]);
+        }
+    }
+
+
+    // public function requestedTaskStore(Request $request, $slug = '')
+    // {
+    //     $request->validate([
+    //         'title' => 'required',
+    //         'text' => 'required',
+    //         'color' => 'required',
+    //     ]);
+
+    //     $currentWorkspace = Utility::getWorkspaceBySlug($slug);
+    //     $objUser = Auth::user();
+    //     $post = $request->all();
+    //     $post['type'] = $request->type;
+
+    //     $assign_to = $request->assign_to;
+    //     // $assign_to[] = $objUser->id;
+    //     $post['assign_to'] = implode(',', $assign_to);
+    //     $post['workspace'] = $currentWorkspace->id;
+    //     $post['created_by'] = $objUser->id;
+
+    //     $note = Note::create($post);
+
+    //     return response()->json([
+    //         'success' => true,
+    //         'message' => 'Note created successfully',
+    //         'data'    => $note,
+    //     ], 201);
+    // }
+
+
+//     public function requestedTaskStore(Request $request, $slug = '')
+// {
+//     $request->validate([
+//         'title' => 'required',
+//         'text' => 'required',
+//         'color' => 'required',
+//     ]);
+
+//     $currentWorkspace = Utility::getWorkspaceBySlug($slug);
+//     $objUser = Auth::user();
+//     $post = $request->all();
+//     $post['type'] = $request->type;
+
+//     $assign_to = $request->assign_to;
+//     // $assign_to[] = $objUser->id;
+//     $post['assign_to'] = implode(',', $assign_to);
+//     $post['workspace'] = $currentWorkspace->id;
+//     $post['created_by'] = $objUser->id;
+
+//     if ($request->has('note_id')) {
+//         // If note_id is provided, it means we're updating an existing note
+//         $note = Note::findOrFail($request->note_id);
+//         $note->update($post);
+//         $message = 'Note updated successfully';
+//     } else {
+//         // If note_id is not provided, create a new note
+//         $note = Note::create($post);
+//         $message = 'Note created successfully';
+//     }
+
+//     return response()->json([
+//         'success' => true,
+//         'message' => $message,
+//         'data'    => $note,
+//     ], 201);
+// }
+
+
+public function requestedTaskStore(Request $request, $slug = '')
+{
+    $request->validate([
+        'title' => 'required',
+        'text' => 'required',
+        'color' => 'required',
+    ]);
+
+    $currentWorkspace = Utility::getWorkspaceBySlug($slug);
+    $objUser = Auth::user();
+    $post = $request->all();
+    $post['type'] = $request->type;
+
+    $assign_to = $request->assign_to;
+    // $assign_to[] = $objUser->id;
+    $post['assign_to'] = !empty($assign_to) ? implode(',', $assign_to) : '';
+    $post['workspace'] = $currentWorkspace->id;
+    $post['created_by'] = $objUser->id;
+
+    if ($request->has('note_id')) {
+        // If note_id is provided, it means we're updating an existing note
+        $note = Note::findOrFail($request->note_id);
+        $note->update($post);
+        $message = 'Note updated successfully';
+    } else {
+        // If note_id is not provided, create a new note
+        $note = Note::create($post);
+        $message = 'Note created successfully';
+    }
+
+    return response()->json([
+        'success' => true,
+        'message' => $message,
+        'data'    => $note,
+    ], 201);
+}
+
 
 
     public function requestedTaskUser($slug = '')
@@ -424,7 +543,8 @@ class apicontroller extends Controller
                 ->where('user_workspaces.workspace_id', '=', $currentWorkspace->id)
                 ->where('users.id', '!=', Auth::user()->id)
                 ->get();
-        } else {
+                $users->makeHidden(['storage_limit']);
+            } else {
             $users = User::where('type', '!=', 'admin')->get();
         }
 
@@ -862,11 +982,18 @@ class apicontroller extends Controller
             $currentWorkspace = Utility::getWorkspaceBySlug($slug);
             $objUser = Auth::user();
             if ($currentWorkspace->permission == 'Owner') {
-                $tasks = Task::where('project_id', '=', $project_id)->get();
+                $tasks = Task::with(['taskCreate:id,name,avatar'])->where('project_id', '=', $project_id)->get();
             } else {
-                $tasks = Task::where('project_id', '=', $project_id)->whereRaw("find_in_set('" . $objUser->id . "',assign_to)")->get();
+                $tasks = Task::with(['taskCreate:id,name,avatar'])->where('project_id', '=', $project_id)->whereRaw("find_in_set('" . $objUser->id . "', assign_to)")->get();
             }
-
+    
+           $tasks->transform(function ($task) {
+                $userIds = explode(',', $task->assign_to);
+                $assignees = User::whereIn('id', $userIds)->select('id', 'name','avatar')->get();
+                $task->setAttribute('assignees', $assignees);
+                return $task;
+            });
+            
             return response()->json([
                 'success' => true,
                 'message' => 'Data Update successful',
@@ -874,7 +1001,7 @@ class apicontroller extends Controller
             ], 200);
         }
     }
-
+    
 
 
     public function taskStore(Request $request, $projectID, $slug = '')
@@ -926,6 +1053,7 @@ class apicontroller extends Controller
                 $post['milestone_id'] = !empty($request->milestone_id) ? $request->milestone_id : 0;
                 $post['status'] = $stage->id;
                 $post['assign_to'] = implode(",", $request->assign_to);
+                $post['created_by'] = $objUser->id;
                 $task = Task::create($post);
                 $google_msg = '';
 
@@ -1011,6 +1139,64 @@ class apicontroller extends Controller
     }
 
 
+    public function taskUpdate(Request $request, $projectID, $taskID, $slug = '')
+    {
+        $rules = [
+                'project_id' => 'required',
+                'title' => 'required',
+                'priority' => 'required',
+                'assign_to' => 'required',
+                'start_date' => 'required',
+                'due_date' => 'required',
+            ];
+
+        $validator = \Validator::make($request->all(), $rules);
+
+        if($validator->fails())
+        {
+            $messages = $validator->getMessageBag();
+
+            return redirect()->back()->with('error', $messages->first());
+        }
+
+        $objUser = Auth::user();
+        $currentWorkspace = Utility::getWorkspaceBySlug($slug);
+
+        if ($objUser->getGuard() == 'client') {
+            $project = Project::where('projects.workspace', '=', $currentWorkspace->id)->where('projects.id', '=', $projectID)->first();
+        } else {
+            $project = Project::select('projects.*')->join('user_projects', 'user_projects.project_id', '=', 'projects.id')->where('user_projects.user_id', '=', $objUser->id)->where('projects.workspace', '=', $currentWorkspace->id)->where('projects.id', '=', $request->project_id)->first();
+        }
+        if ($project) {
+            $post = $request->all();
+            $post['assign_to'] = implode(",", $request->assign_to);
+            $task = Task::find($taskID);
+            $task->update($post);
+
+            return response()->json([
+                'success' => true,
+                'message' => 'Task updated Successfully!',
+                'data' => $task
+            ], 201);
+        } else {
+            return response()->json([
+                'success' => false,
+                'message' => 'You cant Edit Task!',
+            ], 403);        
+        }
+    }
+
+    public function taskDestroy($slug, $projectID, $taskID)
+    {
+        $objUser = Auth::user();
+        $task = Task::where('id', $taskID)->delete();
+        return response()->json([
+            'success' => true,
+            'message' => 'Task deleted Successfully!',
+        ], 201);
+    }
+
+
     public function updateTaskOrder(Request $request, $projectID, $slug = '')
     {
         $currentWorkspace = Utility::getWorkspaceBySlug($slug);
@@ -1031,6 +1217,7 @@ class apicontroller extends Controller
             $user = Auth::user();
             $task = Task::find($request->id);
             $task->status = $request->new_status;
+            $task->updated_status = $user->name;
             $task->save();
 
             $name = $user->name;
@@ -1107,8 +1294,17 @@ class apicontroller extends Controller
                 $post['workspace'] = $currentWorkspace->id;
                 $post['created_by'] = $objUser->id;
                 $userList = [];
+                // if (isset($post['users_list'])) {
+                //     $userList = $post['users_list'];
+                // }
                 if (isset($post['users_list'])) {
-                    $userList = $post['users_list'];
+                    if (is_string($post['users_list'])) {
+                        // Explode the string by comma and trim each email
+                        $userList = array_map('trim', explode(',', $post['users_list']));
+                    } elseif (is_array($post['users_list'])) {
+                        // If it's already an array, just assign it after trimming each element
+                        $userList = array_map('trim', $post['users_list']);
+                    }
                 }
                 $userList[] = $objUser->email;
                 $userList = array_filter($userList);
@@ -1482,6 +1678,139 @@ class apicontroller extends Controller
             ]            
         ]);
     }
+
+
+    public function scanTasks(Request $request, $slug = '')
+    {
+        $barcode = $request->barcode;
+        $currentWorkspace = Utility::getWorkspaceBySlug($slug);
+        
+        $shared_notes = Note::where('type', '=', 'shared')
+                            ->where('workspace', '=', $currentWorkspace->id)
+                            ->where('barcode', $barcode)
+                            ->whereRaw("find_in_set('" . Auth::user()->id . "', notes.assign_to)")
+                            ->get();
+        
+        if ($shared_notes->isEmpty()) {
+            return response()->json([
+                'success' => false,
+                'message' => 'No shared notes found for the provided barcode.',
+            ], 404);
+        }
+    
+        return response()->json([
+            'success' => true,
+            'message' => 'Data fetch successful',
+            'data'  => $shared_notes,
+        ], 200);
+    }
+
+
+    public function updateProfile(Request $request,$id)
+    {
+        // $id = $request->user()->id;
+        $obj = User::find($id);
+        $dir = 'users-avatar/';
+        $logo=Utility::get_file('users-avatar/');
+        if ($obj) {
+            if($request->has('avatar'))
+            {               
+                $logoName = uniqid() . '.png';
+                $path = Utility::upload_file($request,'avatar',$logoName,$dir,[]);
+                if($path['flag'] == 1){
+                    $avatar = $path['url'];
+                }else{
+                    return redirect()->back()->with('error', __($path['msg']));
+                }
+                // $request->avatar->storeAs('avatars', $logoName);
+                $obj->avatar = $logoName;
+            }
+            
+            if (!empty($request->input('email'))) {
+                $obj->email = $request->input('email');
+            }
+            if (!empty($request->input('password'))) {
+                $obj->password = Hash::make($request->input('password'));
+            }
+
+            if ($obj->save()) {
+                $this->data = $obj;
+                $this->success = true;
+                $this->message = 'Profile is updated successfully';
+            }
+        }
+
+        return response()->json(['success' => $this->success, 'message' => $this->message, 'data' => $this->data,]);
+    }
+    
+
+
+    
+    public function subTaskStore(Request $request, $taskID, $clientID = '', $slug = '')
+    {
+        $post = [];
+        $post['task_id'] = $taskID;
+        $post['name'] = $request->name;
+        $post['due_date'] = $request->due_date;
+        $post['status'] = 0;
+        $objUser         = Auth::user();
+        $client_keyword = $objUser->getGuard() == 'client' ? 'client.' : '';
+
+        if ($clientID) {
+            $post['created_by'] = $clientID;
+            $post['user_type'] = 'Client';
+        } else {
+            $post['created_by'] = Auth::user()->id;
+            $post['user_type'] = 'User';
+        }
+        $subtask = SubTask::create($post);
+        if ($subtask->user_type == 'Client') {
+            $user = $subtask->client;
+        } else {
+            $user = $subtask->user;
+        }
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Data Add successful',
+            'data' => $subtask
+        ]);
+    }
+
+    public function subTaskUpdate($subtaskID)
+    {
+        $subtask = SubTask::find($subtaskID);
+        $subtask->status = (int) !$subtask->status;
+        $subtask->save();
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Data update successful',
+            'data' => $subtask
+        ]);   
+     }
+
+    public function subTaskDestroy($subtaskID)
+    {
+        $subtask = SubTask::find($subtaskID);
+        $subtask->delete();
+        return response()->json([
+            'success' => true,
+            'message' => 'Data delete successful',
+        ]);      
+    }
+
+
+    public function subTaskGet($subtaskID)
+    {
+        $subtask = SubTask::where( 'id' ,$subtaskID)->get();
+        return response()->json([
+            'success' => true,
+            'message' => 'Data delete successful',
+            ''
+        ]);      
+    }
+
     
     
 }

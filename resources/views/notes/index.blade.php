@@ -118,6 +118,11 @@
                                                     aria-expanded="false">
                                                     <i class="feather icon-more-vertical"></i>
                                                 </button>
+    <a href="#" onclick="saveAsPDF()" class="btn btn-sm btn-primary py-2" data-toggle="popover"
+        title="{{ __('PDF Download') }}">
+        <i class="ti ti-file-download "></i>
+    </a>
+
                                                 <div class="dropdown-menu dropdown-menu-end">
                                                     <a href="#" class="dropdown-item" data-ajax-popup="true" data-size="lg" data-title="{{ __('Edit Note') }}" data-url="{{route('notes.edit',[$currentWorkspace->slug,$note->id])}}">
                                                     <i class="ti ti-edit"></i> <span>{{ __('Edit') }}</span>
@@ -139,7 +144,26 @@
                                                 <strong>{{ __('Description') }}:</strong> {{$note->text}} <br><br>
                                                 <strong>{{ __('Building Name') }}:</strong> {{$note->building_name}} <br><br>
                                                 <strong>{{ __('Building Number') }}:</strong> {{$note->building_number}}
-                                                <br><br>
+                                                <br>
+                                                <br>
+                                                <br>
+
+                                            @if($note->barcode)
+                                            <div id="printableArea">
+                                                <div style="text-align: center">
+                                                    <strong>{{ __('Building Name') }}:</strong> {{$note->building_name}} <br><br>
+                                                    <!-- Center the barcode -->
+                                                    <div style="display: inline-block;">
+                                                        {!! DNS2D::getBarcodeHTML("$note->barcode", 'QRCODE') !!}
+                                                    </div>
+                                                    <br><br>
+                                                    <strong>{{ __('Building Number') }}:</strong> {{$note->building_number}} <br><br>
+                                                </div>
+                                            </div>
+                                            @else
+                                                {{-- <p>No barcode available</p> --}}
+                                            @endif   
+                                            <br><br>
                                                 <h6 class="text-muted">Requested By</h6>
                                                 <div class="user-group mx-2">
                                                     @if($users = $note->users())
@@ -211,4 +235,32 @@
 
      
     </script>
+  <script type="text/javascript" src="{{ asset('assets/custom/js/html2pdf.bundle.min.js') }}"></script>
+  <script>
+      var filename = $('#chart-hours').val();
+
+      function saveAsPDF() {
+          var element = document.getElementById('printableArea');
+          var opt = {
+              margin: 0.3,
+
+              image: {
+                  type: 'jpeg',
+                  quality: 1
+              },
+              html2canvas: {
+                  scale: 4,
+                  dpi: 72,
+                  letterRendering: true
+              },
+              jsPDF: {
+                  unit: 'in',
+                  format: 'A2'
+              }
+          };
+          html2pdf().set(opt).from(element).save();
+      }
+  </script>
+
+
 @endpush

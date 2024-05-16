@@ -118,6 +118,11 @@
                                                     aria-expanded="false">
                                                     <i class="feather icon-more-vertical"></i>
                                                 </button>
+    <a href="#" onclick="saveAsPDF()" class="btn btn-sm btn-primary py-2" data-toggle="popover"
+        title="<?php echo e(__('PDF Download')); ?>">
+        <i class="ti ti-file-download "></i>
+    </a>
+
                                                 <div class="dropdown-menu dropdown-menu-end">
                                                     <a href="#" class="dropdown-item" data-ajax-popup="true" data-size="lg" data-title="<?php echo e(__('Edit Note')); ?>" data-url="<?php echo e(route('notes.edit',[$currentWorkspace->slug,$note->id])); ?>">
                                                     <i class="ti ti-edit"></i> <span><?php echo e(__('Edit')); ?></span>
@@ -140,7 +145,27 @@
                                                 <strong><?php echo e(__('Building Name')); ?>:</strong> <?php echo e($note->building_name); ?> <br><br>
                                                 <strong><?php echo e(__('Building Number')); ?>:</strong> <?php echo e($note->building_number); ?>
 
-                                                <br><br>
+                                                <br>
+                                                <br>
+                                                <br>
+
+                                            <?php if($note->barcode): ?>
+                                            <div id="printableArea">
+                                                <div style="text-align: center">
+                                                    <strong><?php echo e(__('Building Name')); ?>:</strong> <?php echo e($note->building_name); ?> <br><br>
+                                                    <!-- Center the barcode -->
+                                                    <div style="display: inline-block;">
+                                                        <?php echo DNS2D::getBarcodeHTML("$note->barcode", 'QRCODE'); ?>
+
+                                                    </div>
+                                                    <br><br>
+                                                    <strong><?php echo e(__('Building Number')); ?>:</strong> <?php echo e($note->building_number); ?> <br><br>
+                                                </div>
+                                            </div>
+                                            <?php else: ?>
+                                                
+                                            <?php endif; ?>   
+                                            <br><br>
                                                 <h6 class="text-muted">Requested By</h6>
                                                 <div class="user-group mx-2">
                                                     <?php if($users = $note->users()): ?>
@@ -214,6 +239,34 @@
 
      
     </script>
+  <script type="text/javascript" src="<?php echo e(asset('assets/custom/js/html2pdf.bundle.min.js')); ?>"></script>
+  <script>
+      var filename = $('#chart-hours').val();
+
+      function saveAsPDF() {
+          var element = document.getElementById('printableArea');
+          var opt = {
+              margin: 0.3,
+
+              image: {
+                  type: 'jpeg',
+                  quality: 1
+              },
+              html2canvas: {
+                  scale: 4,
+                  dpi: 72,
+                  letterRendering: true
+              },
+              jsPDF: {
+                  unit: 'in',
+                  format: 'A2'
+              }
+          };
+          html2pdf().set(opt).from(element).save();
+      }
+  </script>
+
+
 <?php $__env->stopPush(); ?>
 
 <?php echo $__env->make('layouts.admin', \Illuminate\Support\Arr::except(get_defined_vars(), ['__data', '__path']))->render(); ?><?php /**PATH C:\xampp\htdocs\ticket_task\resources\views/notes/index.blade.php ENDPATH**/ ?>

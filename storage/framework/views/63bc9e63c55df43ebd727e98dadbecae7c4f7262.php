@@ -10,14 +10,6 @@
             </div>
             <?php endif; ?>
             
-            <div class="form-group col-md-8">
-                <label class="col-form-label"><?php echo e(__('Project')); ?></label>
-                <select class="form-control form-control-light select2" name="project_id" required>
-                    <?php $__currentLoopData = $projects; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $p): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
-                        <option value="<?php echo e($p->id); ?>" <?php if($task->project_id == $p->id): ?> selected <?php endif; ?>><?php echo e($p->name); ?></option>
-                    <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
-                </select>
-            </div>
             <div class="form-group col-md-4">
                 <label class="col-form-label"><?php echo e(__('Milestone')); ?></label>
                 <select class="form-control form-control-light select2" name="milestone_id" id="task-milestone">
