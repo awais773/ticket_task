@@ -185,7 +185,6 @@ class HomeController extends Controller
                 $totalMembers = UserWorkspace::where('workspace_id', '=', $currentWorkspace->id)->count();
 
                 $projectProcess = UserProject::join("projects", "projects.id", "=", "user_projects.project_id")->where("user_id", "=", $userObj->id)->where('projects.workspace', '=', $currentWorkspace->id)->groupBy('projects.status')->selectRaw('count(projects.id) as count, projects.status')->pluck('count', 'projects.status');
-                
               
                 $arrProcessPer = [];
                 $arrProcessLabel = [];
@@ -194,9 +193,10 @@ class HomeController extends Controller
                     if ($totalProject == 0) {
                         $arrProcessPer[] = 0.00;
                     } else {
-                        $arrProcessPer[] = round(($process * 100) / $totalProject, 2);
+                        $arrProcessPer[] =  $process ;
                     }
                 }
+
                 $arrProcessClass = [
                     'text-success',
                     'text-primary',

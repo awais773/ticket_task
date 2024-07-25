@@ -1665,7 +1665,7 @@ public function requestedTaskStore(Request $request, $slug = '')
     
         $onHoldCount = Project::where('workspace', $currentWorkspace->id)
                                ->where('created_by', $user->id)
-                               ->where('status', 'On Hold')
+                               ->where('status', 'OnHold')
                                ->count();
     
         return response()->json([
