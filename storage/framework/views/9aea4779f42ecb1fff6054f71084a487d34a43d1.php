@@ -60,8 +60,10 @@
                                      <?php else: ?>
                                          <?php if($user->permission == 'Owner'): ?>
                                              <div class="badge p-2 px-3 rounded bg-success"><?php echo e(__('Owner')); ?></div>
-                                         <?php else: ?>
+                                         <?php elseif($user->permission == 'Member'): ?>
                                              <div class="badge p-2 px-3 rounded bg-warning"><?php echo e(__('Member')); ?></div>
+                                         <?php else: ?>
+                                             <div class="badge p-2 px-3  rounded bg-success"><?php echo e(__('Head Department')); ?></div>
                                          <?php endif; ?>
                                      <?php endif; ?>
                                  </h6>

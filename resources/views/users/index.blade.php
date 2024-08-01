@@ -59,8 +59,10 @@
                                      @else
                                          @if ($user->permission == 'Owner')
                                              <div class="badge p-2 px-3 rounded bg-success">{{ __('Owner') }}</div>
-                                         @else
+                                         @elseif ($user->permission == 'Member')
                                              <div class="badge p-2 px-3 rounded bg-warning">{{ __('Member') }}</div>
+                                         @else
+                                             <div class="badge p-2 px-3  rounded bg-success">{{ __('Head Department') }}</div>
                                          @endif
                                      @endif
                                  </h6>

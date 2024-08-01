@@ -417,6 +417,7 @@ class UserController extends Controller
         $objUser->project_each_year = $request->project_each_year;
         $objUser->employee_number = $request->employee_number;
         $objUser->employee_salary = $request->employee_salary;
+        $objUser->user_type = $request->user_type;
          $dir = 'users-avatar/';
 
         $logo=Utility::get_file('users-avatar/');
@@ -740,6 +741,7 @@ class UserController extends Controller
         $post     = $request->all();
         $name     = $post['username'];
         $email    = $post['useremail'];
+        $user_type    = $post['user_type'];
         $password = $post['userpassword'];
         $verify = date('Y-m-d i:h:s');
         $registerUsers = User::where('email', $email)->first();
@@ -766,7 +768,7 @@ class UserController extends Controller
                     $arrUser                      = [];
                     $arrUser['name']              = $name;
                     $arrUser['email']             = $email;
-                    $arrUser['user_type']          = 'user';
+                    $arrUser['user_type']          = $user_type;
                     $arrUser['password']          = Hash::make($password);
                     $arrUser['currant_workspace'] = $currentWorkspace->id;
                     $arrUser['email_verified_at'] = $verify;
@@ -828,11 +830,12 @@ class UserController extends Controller
 
         if(!$is_assigned)
         {
+            $permission = ($user_type == 'head_department') ? 'Head Department' : 'Member';
             UserWorkspace::create(
                 [
                     'user_id' => $registerUsers->id,
                     'workspace_id' => $currentWorkspace->id,
-                    'permission' => 'Member',
+                    'permission' => $permission,
                 ]
             );
 

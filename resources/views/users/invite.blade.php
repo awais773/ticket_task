@@ -16,6 +16,15 @@
             <input class="form-control" name="userpassword" type="password" required autocomplete="new-password"
                 id="userpassword" placeholder="{{ __('Please enter password') }}">
         </div>
+        <div class="col-md-12 form-group invite_user_div">
+            <label for="user_type" class="form-label">{{ __('User Type') }}</label>
+            <select class="form-control" name="user_type" id="user_type" required>
+                <option value="" disabled selected>{{ __('Select User Type') }}</option>
+                <option value="head_department">{{ __('Head Department') }}</option>
+                <option value="user">{{ __('User') }}</option>
+            </select>
+        </div>
+
     </div>
 </div>
 <div class=" col-md-12 modal-footer">
@@ -83,6 +92,7 @@
             var useremail = $('#invite_email').val();
             var username = $('#username').val();
             var userpassword = $('#userpassword').val();
+            var usertype = $('#user_type').val();
 
 
             $('.username-error-message').remove();
@@ -116,7 +126,16 @@
                 );
                 return false;
 
-            } else {
+            }
+            $('.usertype-error-message').remove();
+            if (usertype == null) {
+                $('#user_type').focus().after(
+                    '<span class="usertype-error-message error-message">{{ __('This field is required.') }}</span>'
+                );
+                return false;
+            }
+            
+            else {
 
                 $.ajax({
                     url: '{{ route('users.invite.update', '__slug') }}'.replace('__slug',
@@ -127,6 +146,7 @@
                         'useremail': useremail,
                         'username': username,
                         'userpassword': userpassword,
+                        'user_type': usertype
                     },
                     success: function(data) {
 

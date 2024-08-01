@@ -186,7 +186,7 @@
                             <?php endif; ?>
                            <?php endif; ?>
 
-                </div>
+                </div> 
             </div>
         <?php else: ?>
             <div class="container mt-5">

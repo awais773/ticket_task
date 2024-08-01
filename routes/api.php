@@ -87,6 +87,10 @@ Route::post('subTaskUpdate/{id}', [apicontroller::class, 'subTaskUpdate']);
 Route::delete('subTaskDestroy/{id}', [apicontroller::class, 'subTaskDestroy']);
 Route::get('subTaskGet/{id}', [apicontroller::class, 'subTaskGet']);
 
+/// activity
+Route::get('getProjectActivities/{projectID}', [apicontroller::class, 'getProjectActivities']);
+Route::post('createUser', [apicontroller::class, 'createUser']);
+
 
 
 

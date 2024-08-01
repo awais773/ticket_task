@@ -1807,8 +1807,176 @@ public function requestedTaskStore(Request $request, $slug = '')
         return response()->json([
             'success' => true,
             'message' => 'Data delete successful',
-            ''
+            'data' => $subtask
         ]);      
+    }
+
+
+    public function getProjectActivities($projectID, $slug = '')
+    {
+        $objUser = Auth::user();
+        $currentWorkspace = Utility::getWorkspaceBySlug($slug);
+
+        if ($objUser->getGuard() == 'client') {
+            $project = Project::select('projects.*')
+                ->join('client_projects', 'projects.id', '=', 'client_projects.project_id')
+                ->where('client_projects.client_id', '=', $objUser->id)
+                ->where('projects.workspace', '=', $currentWorkspace->id)
+                ->where('projects.id', '=', $projectID)
+                ->first();
+        } else {
+            $project = Project::select('projects.*')
+                ->join('user_projects', 'projects.id', '=', 'user_projects.project_id')
+                ->where('user_projects.user_id', '=', $objUser->id)
+                ->where('projects.workspace', '=', $currentWorkspace->id)
+                ->where('projects.id', '=', $projectID)
+                ->first();
+        }
+
+        if ($project) {
+            $activities = $project->activities;
+
+            // if (!((isset($permissions) && in_array('show activity', $permissions)) || $currentWorkspace->permission == 'Owner')) {
+            //     return response()->json([
+            //         'success' => false,
+            //         'message' => 'orPermission denied',
+            //     ]); 
+            // }
+
+            $activityData = $activities->map(function ($activity) {
+                return [
+                    'log_type' => $activity->log_type,
+                    'log_type_description' => $activity->logType($activity->log_type),
+                    'remark' => $activity->getRemark(),
+                    'created_at' => $activity->created_at->diffForHumans(),
+                ];
+            });
+            return response()->json([
+                'success' => true,
+                'message' => 'Data delete successful',
+                'data' => $activityData
+            ]);  
+        } else {
+            return response()->json([
+                'success' => false,
+                'message' => 'Project not found or permission denied.',
+            ]);  
+        }
+    }
+
+
+    public function createUser( Request $request,$slug = '')
+    {
+        $currentWorkspace = Utility::getWorkspaceBySlug($slug);
+        $post = $request->all();
+        $name = $post['username'];
+        $email = $post['useremail'];
+        $user_type = $post['user_type'];
+        $password = $post['userpassword'];
+        $verify = date('Y-m-d i:h:s');
+        $registerUsers = User::where('email', $email)->first();
+
+        if ($registerUsers) {
+            return response()->json(
+                [
+                    'success' => false,
+                    'code' => 400,
+                    'status' => 'Error',
+                    'message' => 'Email is Already Exists.',
+                ],
+                400
+            );
+        } else {
+            $objUser = Auth::user();
+            $plan = Plan::find($objUser->plan);
+            if ($plan) {
+                $totalWS = $objUser->countUsers($currentWorkspace->id);
+                if ($totalWS < $plan->max_users || $plan->max_users == -1) {
+                    $arrUser = [
+                        'name' => $name,
+                        'email' => $email,
+                        'user_type' => $user_type,
+                        'password' => Hash::make($password),
+                        'currant_workspace' => $currentWorkspace->id,
+                        'email_verified_at' => $verify,
+                        'lang' => $currentWorkspace->lang,
+                    ];
+                    $registerUsers = User::create($arrUser);
+                    $assignPlan = $registerUsers->assignPlan(1);
+                    $registerUsers->password = $password;
+                    if (!$assignPlan['is_success']) {
+                        return response()->json(
+                            [
+                                'success' => false,
+                                'code' => 400,
+                                'status' => 'Error',
+                                'message' => ($assignPlan['error']),
+                            ],
+                            400
+                        );
+                    }
+                    try {
+                        Mail::to($email)->send(new SendLoginDetail($registerUsers));
+                    } catch (\Exception $e) {
+                        $smtp_error = __('E-Mail has been not sent due to SMTP configuration');
+                    }
+                } else {
+                    return response()->json(
+                        [
+                            'success' => false,
+                            'code' => 400,
+                            'status' => 'Error',
+                            'message' => 'Your user limit is over, Please upgrade plan.',
+                        ],
+                        400
+                    );
+                }
+            } else {
+                return response()->json(
+                    [
+                        'success' => false,
+                        'code' => 400,
+                        'status' => 'Error',
+                        'message' => 'Default plan is deleted.',
+                    ],
+                    400
+                );
+            }
+        }
+
+        // Assign workspace
+        $is_assigned = false;
+        foreach ($registerUsers->workspace as $workspace) {
+            if ($workspace->id == $currentWorkspace->id) {
+                $is_assigned = true;
+            }
+        }
+
+        if (!$is_assigned) {
+            $permission = ($user_type == 'head_department') ? 'Head Department' : 'Member';
+            UserWorkspace::create(
+                [
+                    'user_id' => $registerUsers->id,
+                    'workspace_id' => $currentWorkspace->id,
+                    'permission' => $permission,
+                ]
+            );
+
+            try {
+                Mail::to($registerUsers->email)->send(new SendWorkspaceInvication($registerUsers, $currentWorkspace));
+            } catch (\Exception $e) {
+                $smtp_error = __('E-Mail has been not sent due to SMTP configuration');
+            }
+        }
+
+        return response()->json(
+            [
+                'success' => true,
+                'code' => 200,
+                'data' =>$registerUsers,
+                'message' =>'Users Invited Successfully!',
+            ]
+        );
     }
 
     

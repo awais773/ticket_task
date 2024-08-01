@@ -27,6 +27,14 @@
             <label for="name" class="col-form-label">{{ __(' Employee Number')}}</label>
             <input type="text" class="form-control" id="employee_number" name="employee_number" value="{{$user->employee_number}}"/>
         </div>
+        {{-- <div class="col-md-12">
+            <label for="user_type" class="col-form-label">{{ __('User Type') }}</label>
+            <select class="form-control" id="user_type" name="user_type">
+                <option value="head_department" {{ $user->user_type == 'head_department' ? 'selected' : '' }}>{{ __('Head Department') }}</option>
+                <option value="user" {{ $user->user_type == 'user' ? 'selected' : '' }}>{{ __('User') }}</option>
+            </select>
+        </div> --}}
+
         </div>
     </div>
         <div class="modal-footer">

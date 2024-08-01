@@ -188,7 +188,7 @@
                             @endif
                            @endauth
 
-                </div>
+                </div> 
             </div>
         @else
             <div class="container mt-5">
